@@ -33,7 +33,7 @@
             name="id" 
             id="id"
             value=
-            "<%= cat.id%>">
+            <%= cat.id%>>
 
 
             <input type="text" 
