@@ -73,8 +73,8 @@ public class srvCategoria extends HttpServlet {
             if (categoria != null) {
 
                 request.setAttribute("objetoCategoria", categoria);
-
-                encaminharPagina("categoria.jsp", request, response);
+                
+                encaminharPagina("categoria/categoria.jsp", request, response);
             } else {
                 encaminharPagina("error.jsp", request, response);
             }
@@ -88,7 +88,7 @@ public class srvCategoria extends HttpServlet {
                 excluir.excluir(Integer.parseInt(id));
                 encaminharPagina("categoria/categoria.jsp", request, response);
             } else {
-                encaminharPagina("error.jsp", request, response);
+                
             }
         }
     }
@@ -114,14 +114,15 @@ public class srvCategoria extends HttpServlet {
             int id = Integer.parseInt(request.getParameter("id"));
             String descricao = request.getParameter("descricao");
             String ativo = request.getParameter("ativo");
+            
 
-            if (!descricao.matches("^[A-Za-z ]{5,45}$")) {
+            if (!descricao.matches("^.{5,45}$")) {
                 System.out.println("descrição não ta certa");
+                return;
             } else {
                 categoria.id = id;
                 categoria.descricao = descricao;
                 categoria.ativo = "Y";
-                System.out.println("A categoria foi salva");
             }
             String retorno = null;
 

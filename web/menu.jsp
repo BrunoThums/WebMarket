@@ -5,6 +5,7 @@
 --%>
 <%@page import="entidade.Pessoa"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@include file="checkLogin.jsp" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -45,8 +46,7 @@
         <link href="/WebMarket/css/navbar.css" rel="stylesheet">
     </head>
     <body>
-        <%
-            Pessoa p = new Pessoa();
+        <%            Pessoa p = new Pessoa();
         %>
         <nav class="navbar navbar-expand-md navbar-dark bg-dark" 
              aria-label="Fourth navbar example">
@@ -118,26 +118,18 @@
                                 <i class="fas fa-user-alt center"></i></a>
                             <ul class="dropdown-menu" aria-labelledby="dropdown04">
 
-                                <%--CADASTRO DE PESSOA--%>
 
                                 <%
                                     String user = (String) session.getAttribute("email");
-                                    if (user == null) {
                                 %>
-                                <li>--
-                                    <a class="dropdown-item" 
-                                       href="login.jsp">
-                                        Login
-                                    </a>
-                                </li>
-                                    <%} else if (user != null) { %>
+                                
                                 <li>
                                     <a class="dropdown-item" 
                                        href="deslogar.jsp">
                                         Deslogar
                                     </a>
                                 </li>
-                                    <% }%>
+                                
                                 <li><a class="dropdown-item" href="pessoa/cadastroLogin.jsp">Cadastro</a></li>
                             </ul>
                         </li>

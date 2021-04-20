@@ -41,10 +41,10 @@ public class CategoriaDao implements IDAO<Categoria> {
         try {
             Statement stm = ConexaoBD.getInstance().getConnection().createStatement();
 
-            String sql = "UPDATE categoria SET"
-                    + "descricao = " + categoria.descricao + ","
-                    + "atualizado_em = 'now()' "
-                    + "WHERE id = '" + categoria.id + "'";
+            String sql = "UPDATE categoria SET "
+                    + "descricao='" + categoria.descricao + "',"
+                    + "updated_at='now()' "
+                    + "WHERE id='" + categoria.id + "'";
 
             int retorno = stm.executeUpdate(sql);
 

@@ -42,8 +42,8 @@
                     %>
 
                 <tr>
-                    <td><a href='/WebMarket/acao?param=edCategoria&id=<%= c.id%>'><i class="far fa-edit center"></i></a></td>
-                    <td><a href='/WebMarket/acao?param=exCategoria&id=<%= c.id%>'><i class="far fa-trash-alt"></i></a></td>
+                    <td><a href='/WebMarket/Categoria?param=edCategoria&id=<%= c.id%>'><i class="far fa-edit center"></i></a></td>
+                    <td><a href='/WebMarket/Categoria?param=exCategoria&id=<%= c.id%>'><i class="far fa-trash-alt"></i></a></td>
                     <td><%= c.id%></td>                
                     <td><%= c.descricao%></td>
                     <td><%= c.criado_em%></td>
@@ -59,6 +59,6 @@
         </div>
         <br>
         <br>
-        <a href='../index.jsp'>Voltar</a>
+        <a href='/WebMarket/index.jsp'>Voltar</a>
     </body>
 </html>

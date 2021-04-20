@@ -10,6 +10,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
+    
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" 
@@ -18,6 +19,7 @@
         <title>XL - Pessoas</title>
     </head>
     <body>
+        
         <h1>Listagem de Pessoas</h1>
 
         <%
@@ -42,7 +44,7 @@
                     %>
                 
                 <tr>
-                    <td><a href='/WebMarket/acao?param=edPessoa&id=<%= c.id%>'><i class="far fa-edit center"></i></a></td>
+                    <td><a href='/WebMarket/pessoa/editaConta.jsp?id=<%= c.id%>'><i class="far fa-edit center"></i></a></td>
                     <td><a href='/WebMarket/acao?param=exPessoa&id=<%= c.id%>'><i class="far fa-trash-alt"></i></a></td>
                     <td><%= c.id%></td>                
                     <td><%= c.nome%></td>

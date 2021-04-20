@@ -1,3 +1,4 @@
+<%@page import="dao.PessoaDao"%>
 --<%-- 
     Document   : cadastroLogin
     Created on : 31 de mar. de 2021, 08:13:36
@@ -15,7 +16,7 @@
                 border-color: red;
                 z-index:2;
             }
-        
+
         </style>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,7 +24,7 @@
         <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
         <meta name="generator" content="Hugo 0.80.0">
         <%--Título--%>
-        <title>XL - Criar Conta</title>
+        <title>XL - Atualizar Conta</title>
         <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sign-in/">
         <!-- Bootstrap core CSS -->
         <link href="/WebMarket/css/bootstrap.min.css" rel="stylesheet">
@@ -34,7 +35,7 @@
         <link rel="mask-icon" href="/docs/5.0/assets/img/favicons/safari-pinned-tab.svg" color="#7952b3">
         <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon.ico">
         <meta name="theme-color" content="#7952b3">
-        
+
         <style>
             .bd-placeholder-img {
                 font-size: 1.125rem;
@@ -57,23 +58,28 @@
     <body class="text-center">
 
         <%
-            Pessoa pessoa = new Pessoa();
-
-            pessoa.id = 0;
-            pessoa.nome = "";
-            pessoa.senha = "";
-            pessoa.email = "";
-            pessoa.endereco = "";
-            pessoa.telefone = "";
+            Pessoa pessoa = null;
+            try {
+                Integer id = Integer.parseInt(request.getParameter("id"));
+                if (id == null) {
+                    throw new RuntimeException();
+                }
+                pessoa = new PessoaDao().consultarId(id);
+                if (pessoa == null) {
+                    throw new RuntimeException();
+                }
+            } catch (Exception e) {
+                response.sendRedirect("/WebMarket/pessoa/listagemPessoas.jsp");
+            }
 
 
         %>
 
         <main class="form-signin">
-            <form method="post" name="cadastroUsuario" action="/WebMarket/acao?param=cadastroPessoa">            
+            <form method="post" name="atualizarUsuario" action="/WebMarket/acao?param=edPessoa">            
                 <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
                 <script language="JavaScript" src="../js/validaLogin.js"></script>
-                <h1 class="h3 mb-3 fw-normal">Criar conta</h1>
+                <h1 class="h3 mb-3 fw-normal">Atualizar conta</h1>
 
                 <h2>XingoLingo</h2>
                 <%--ID--%>
@@ -82,7 +88,7 @@
                        id="id"
                        value=
                        <%= pessoa.id%>>
-                
+
                 <%--Nome--%>
                 <label for="txtNome" 
                        class="visually-hidden">
@@ -95,7 +101,7 @@
                        placeholder="Nome*" 
                        required value=
                        <%= pessoa.nome%>  > 
-                
+
                 <%--Email--%>
                 <label for="txtEmail" 
                        class="visually-hidden">
@@ -110,9 +116,9 @@
                        required 
                        pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"
                        value="<%= pessoa.email%>">
-                
+
                 <%--Senha--%>
-                <label for="txtPassword" 
+                <%--<label for="txtPassword" 
                        class="visually-hidden">
                     Password
                 </label>
@@ -124,8 +130,8 @@
                        class="form-control" 
                        placeholder="Senha*" 
                        required 
-                       value="<%= pessoa.senha%>">
-                
+                       value="<%= pessoa.senha%>">--%>
+
                 <%--Endereço--%>
                 <label for="txtEndereco" 
                        class="visually-hidden">
@@ -137,7 +143,7 @@
                        class="form-control" 
                        placeholder="Endereço" 
                        value="<%= pessoa.endereco%>">
-                
+
                 <%--Endereço--%>
                 <label for="inputTelefone" 
                        class="visually-hidden">
@@ -152,14 +158,13 @@
                        placeholder="Telefone*" 
                        required 
                        value="<%= pessoa.telefone%>">
-                
+
                 <%--Cadastrar--%>
                 <button class="w-100 btn btn-lg btn-dark" 
-                        type="submit" 
-                        value="Salvar">
-                    Cadastrar
+                        type="submit">
+                    Atualizar
                 </button>
-                
+
                 <h6>Campos com o "*" são obrigatórios</h6>
                 <%--Voltar para login--%>
                 <div class="text-center">

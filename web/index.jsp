@@ -16,17 +16,6 @@
         <title>XingoLingo</title>
     </head>
     <body>
-        <%
-            String email = (String) session.getAttribute("email");
-            if (email == null) {
-                System.out.println("Index: Conta Não Logada");
-                response.sendRedirect("login.jsp");
-            } else {
-                out.print("Bem-vindo "+email+"! <br>");
-            }
-        %>
-
-
         <h1 style="color: red">Navegue pelas seções:</h1>
 
         <ul>

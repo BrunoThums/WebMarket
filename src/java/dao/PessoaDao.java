@@ -44,13 +44,13 @@ public class PessoaDao implements IDAO<Pessoa> {
             Statement stm = ConexaoBD.getInstance().getConnection().createStatement();
 
             String sql = "UPDATE pessoa SET "
-                    + "nome=" + o.nome + ","
-                    + "senha=" + o.senha + ","
-                    + "email=" + o.email + ","
-                    + "endereco=" + o.endereco + ","
-                    + "telefone=" + o.telefone + ","
-                    + "ativo=" + o.ativo + ","
-                    + "'now()' "
+                    + "nome='" + o.nome + "',"
+                    + (o.senha != null ? "senha='" + o.senha + "'," : "")
+                    + "email='" + o.email + "',"
+                    + "endereco='" + o.endereco + "',"
+                    + "telefone='" + o.telefone + "',"
+                    + "ativo='" + o.ativo + "',"
+                    + "updated_at = now() "
                     + "WHERE id= " + o.id;
 
             System.out.println("SQL: " + sql);
@@ -145,7 +145,7 @@ public class PessoaDao implements IDAO<Pessoa> {
     public boolean consultar(Pessoa o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     public Pessoa consultarEmail(String email) {
         String sql = "SELECT * FROM pessoa WHERE email ='" + email + "'";
         try {
