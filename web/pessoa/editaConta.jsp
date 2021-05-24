@@ -1,15 +1,12 @@
 <%@page import="dao.PessoaDao"%>
---<%-- 
-    Document   : cadastroLogin
-    Created on : 31 de mar. de 2021, 08:13:36
-    Author     : Usuario
---%>
-
 <%@page import="entidade.Pessoa"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
+        <!-- Logo na página-->
+        <link rel="shortcut icon" href="logo.png" type="image/x-icon">
+        <link rel="icon" href="logo.png" type="image/x-icon">
         <style> 
             input:invalid:not(:placeholder-shown){
                 box-shadow: 0px 0px 0px 0.25rem rgba(255,0,0,.25);

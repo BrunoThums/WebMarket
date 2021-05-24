@@ -1,9 +1,3 @@
-<%-- 
-    Document   : pesquisaCategoria
-    Created on : 9 de abr. de 2021, 07:03:28
-    Author     : Usuario
---%>
-
 <%@page import="servlet.pesquisa"%>
 <%@page import="entidade.Categoria"%>
 <%@page import="java.util.ArrayList"%>
@@ -12,10 +6,9 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>XingoLingo</title>
     </head>
     <body>
-        <%@include file="menu.jsp" %>
 
         <h1>Pesquisa de categorias</h1>
 

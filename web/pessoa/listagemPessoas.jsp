@@ -19,7 +19,6 @@
         <title>XL - Pessoas</title>
     </head>
     <body>
-        
         <h1>Listagem de Pessoas</h1>
 
         <%

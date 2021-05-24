@@ -1,9 +1,3 @@
-<%-- 
-    Document   : listagemCategoria
-    Created on : 4 de abr de 2021, 20:41:13
-    Author     : STI
---%>
-
 <%@page import="dao.CategoriaDao"%>
 <%@page import="entidade.Categoria"%>
 <%@page import="java.util.ArrayList"%>
@@ -20,6 +14,13 @@
     <body>
         <h1>Listagem de Categorias</h1>
 
+        <form method="post" action="/WebMarket/pesquisa?param=pesquisar">
+
+            <input type="search" name="busca" placeholder="Faça o filtro">
+
+            <input type="submit" value="Pesquisar">
+
+        </form>
         <%
             ArrayList<Categoria> listCateg = new CategoriaDao().consultarTodos();
         %>

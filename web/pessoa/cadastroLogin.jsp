@@ -1,28 +1,67 @@
---<%-- 
-    Document   : cadastroLogin
-    Created on : 31 de mar. de 2021, 08:13:36
-    Author     : Usuario
---%>
-
 <%@page import="entidade.Pessoa"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html>
     <head>
+        <%@include file="../logo.jsp" %>
         <style> 
+            <%--Sombras no texto--%>
+            .a{
+                text-shadow: #FFF 0 -1px 1px, #ff0 0 -1px 1px, #ff8000 0 -1px 2px, red 0 -1px 4px;
+                color: rgb(25, 200, 200); 
+                margin-bottom: 4%;
+            }
+            @media (min-width: 768px) {
+                .bd-placeholder-img-lg {
+                    font-size: 3.5rem;
+                }
+            }
+            <%--Sombras no texto--%>
+            .a1{
+                text-shadow: #FFF 0 -1px 1px, #ff0 0 -1px 1px, #ff8000 0 -1px 2px, red 0 -1px 4px;
+                color: rgb(25, 200, 200); 
+                width: 50px; 
+                height: 40px;
+                font-size: 22px; 
+                line-height: 30px; 
+                padding: 1px; 
+                font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+                font-weight: normal;
+                text-decoration: none;
+                font-style: normal;
+                font-variant: normal;
+                text-transform: none;
+                margin-bottom: 4%; 
+            }
+            button:hover {
+                font-style: oblique;
+                border-color: rgb(25, 200, 200);
+            }
+            button:active {
+                background-color: rgb(25, 200, 200);
+                color: rgb(15, 15, 15); 
+            }
+            
+            body {
+                <%--Plano de Fundo do Bonoro --%>
+                background-image: url(bonoro.jpg);
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                background-size: 100% 100%;
+            }
             input:invalid:not(:placeholder-shown){
                 box-shadow: 0px 0px 0px 0.25rem rgba(255,0,0,.25);
                 border-color: red;
                 z-index:2;
             }
-        
         </style>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="">
         <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
         <meta name="generator" content="Hugo 0.80.0">
-        <%--Título--%>
+        <!--Título-->
         <title>XL - Criar Conta</title>
         <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sign-in/">
         <!-- Bootstrap core CSS -->
@@ -34,7 +73,7 @@
         <link rel="mask-icon" href="/docs/5.0/assets/img/favicons/safari-pinned-tab.svg" color="#7952b3">
         <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon.ico">
         <meta name="theme-color" content="#7952b3">
-        
+
         <style>
             .bd-placeholder-img {
                 font-size: 1.125rem;
@@ -73,16 +112,16 @@
             <form method="post" name="cadastroUsuario" action="/WebMarket/acao?param=cadastroPessoa">            
                 <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
                 <script language="JavaScript" src="../js/validaLogin.js"></script>
-                <h1 class="h3 mb-3 fw-normal">Criar conta</h1>
-
-                <h2>XingoLingo</h2>
+                
+                <h1 class="h3 mb-3 fw-normal a">Criar conta</h1>
+                <h2 class="a" >XingoLingo</h2>
                 <%--ID--%>
                 <input type="hidden" 
                        name="id" 
                        id="id"
                        value=
                        <%= pessoa.id%>>
-                
+
                 <%--Nome--%>
                 <label for="txtNome" 
                        class="visually-hidden">
@@ -95,7 +134,7 @@
                        placeholder="Nome*" 
                        required value=
                        <%= pessoa.nome%>  > 
-                
+
                 <%--Email--%>
                 <label for="txtEmail" 
                        class="visually-hidden">
@@ -110,7 +149,7 @@
                        required 
                        pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"
                        value="<%= pessoa.email%>">
-                
+
                 <%--Senha--%>
                 <label for="txtPassword" 
                        class="visually-hidden">
@@ -125,7 +164,7 @@
                        placeholder="Senha*" 
                        required 
                        value="<%= pessoa.senha%>">
-                
+
                 <%--Endereço--%>
                 <label for="txtEndereco" 
                        class="visually-hidden">
@@ -137,7 +176,7 @@
                        class="form-control" 
                        placeholder="Endereço" 
                        value="<%= pessoa.endereco%>">
-                
+
                 <%--Endereço--%>
                 <label for="inputTelefone" 
                        class="visually-hidden">
@@ -152,18 +191,18 @@
                        placeholder="Telefone*" 
                        required 
                        value="<%= pessoa.telefone%>">
-                
+
                 <%--Cadastrar--%>
-                <button class="w-100 btn btn-lg btn-dark" 
+                <button class="w-100 btn btn-lg btn-blue a1" 
                         type="submit" 
                         value="Salvar">
                     Cadastrar
                 </button>
-                
-                <h6>Campos com o "*" são obrigatórios</h6>
+
+                <h6 class="a">Campos com o "*" são obrigatórios</h6>
                 <%--Voltar para login--%>
                 <div class="text-center">
-                    <a  href="../index.jsp">Voltar</a> 
+                    <a class="a" href="../index.jsp">Voltar</a> 
                 </div>
                 <%--Copyrights XingoLingo--%>
                 <p class="mt-5 mb-3 text-muted">&copy;XingoLingo 2021</p>

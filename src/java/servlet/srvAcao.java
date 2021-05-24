@@ -147,7 +147,7 @@ public class srvAcao extends HttpServlet {
                 p.id = id;
                 p.nome = nome;
                 p.email = email;
-               // p.senha = Cripto.criptografar(senha);
+                p.senha = Cripto.criptografar(senha);
                 p.endereco = endereco;
                 p.telefone = telefone;
                 p.ativo = "Y";
