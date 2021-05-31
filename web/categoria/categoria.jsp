@@ -61,14 +61,13 @@
                         timer: 1500
                     });
                 } 
-            });
-
         </script>
         
         <h1 style="text-align: center;">Cadastro de Categorias</h1>
 
         <form style="padding: 20px; text-align: center;" name='formCateg' method='post' action='/WebMarket/Categoria?param=salvarCategoria'>
-              <input type="hidden" name="id" id="id" value= <%= cat.id%>>
+            <input type="hidden" name="id" id="id" value= <%= cat.id%>>
+            <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 
 
             <input type="text" 
