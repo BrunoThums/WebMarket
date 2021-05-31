@@ -1,9 +1,3 @@
-<%-- 
-    Document   : dadosConta
-    Created on : 8 de abr de 2021, 19:45:33
-    Author     : STI
---%>
-
 <%@page import="dao.PessoaDao"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="apoio.Cripto"%>
@@ -21,30 +15,20 @@
         <meta name="generator" content="Hugo 0.80.0">
         <title>Dados Pessoais</title>
 
-
-        <!-- Bootstrap core CSS -->
-        <link href="/WebMarket/css/bootstrap.min.css" rel="stylesheet">
-
         <!-- Favicons -->
         <link rel="apple-touch-icon" href="/docs/5.0/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
         <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
         <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
         <link rel="manifest" href="/docs/5.0/assets/img/favicons/manifest.json">
-        <link rel="mask-icon" href="/docs/5.0/assets/img/favicons/safari-pinned-tab.svg" color="#7952b3">
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon.ico">
         <meta name="theme-color" content="#7952b3">
+        <%@include file="../menu/menu.jsp" %>
     </head>
     <body>
-
-        <%
-
-            HttpSession sessao = ((HttpServletRequest) request).getSession();
-
-            Pessoa f = (Pessoa) sessao.getAttribute("usuarioLogado");
+        <%  Pessoa f = (Pessoa) sessao.getAttribute("usuarioLogado");
 
             f = new PessoaDao().consultarEmail(f.email);
-
-            System.out.println(f);
         %>   
 
         <style>
@@ -63,6 +47,10 @@
                 align-items: center;
             }
 
+            .navbar {
+                margin-top: -18px;
+            }
+
             main {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
@@ -79,7 +67,7 @@
                 margin: .45em 0;
             }
 
-            input {
+            .campo {
                 margin-top: .35em;
             }
 
@@ -87,11 +75,11 @@
                 margin: .6em 0;
             }
 
-            input + button {
+            .campo + button {
                 margin-top: 1.2em;
             }
 
-            input, label {
+            .campo, label {
                 width: 100%;
             }
 
@@ -126,18 +114,18 @@
 
         </style>
 
-        <main>
+        <main >
             <form method="post" action="/WebMarket/acao?param=editarPessoa">
                 <h2>Dados Pessoais</h2>
 
                 <input type="hidden" name="id" value="<%=f.id%>">
 
-                <label for="Email">Nome *
-                    <input type="text" name="nome" class="form-control" value="<%= f.nome%>" required autofocus>
+                <label class="labe" for="Nome">Nome *
+                    <input type="text" name="nome" pattern="^[A-Za-z ]{3,45}$" class="form-control campo" value="<%= f.nome%>" required autofocus>
                 </label>
 
                 <label for="Email">Email *
-                    <input type="email" name="email" class="form-control" value="<%= f.email%>" required >
+                    <input type="email" name="email" pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" class="form-control" value="<%= f.email%>" required >
                 </label>
 
                 <label for="Endereço">Endereço *
@@ -145,15 +133,11 @@
                 </label>
 
                 <label for="Telefone">Telefone *
-                    <input type="text" name="telefone" class="form-control" value="<%= f.telefone%>" required >
+                    <input type="text" name="telefone" pattern="^((\+\d{1,2})?\d{2})?\d{9}$" class="form-control" value="<%= f.telefone%>" required >
                 </label>
 
                 <button type="submit" class="btn btn-dark">Mudar Dados da Conta</button>
-                <%
-                    String msg = String.valueOf(request.getAttribute("erroEdit"));
-                    if (msg.equals("erro")) {       %>
-                <p>Erro ao Editar os Dados da Conta/p>
-                    <% }%>
+
             </form>
             <form method="post" action="/WebMarket/acao?param=mudarSenha">
                 <h2>Senha e Conta</h2>
@@ -177,5 +161,39 @@
                 <button class="btn btn-danger"><a href="/WebMarket/acao?param=excluirPessoa&id=<%= f.id%>">Desativar Conta</a> </button>
             </form>
         </main>
+
+
+        <script>
+
+            document.addEventListener('readystatechange', () => {
+                if (document.readyState !== "complete")
+                    return
+
+                const params = new URL(location.href).searchParams
+
+                if (params.get('erro') === 'ERRO') {
+
+                    swal({
+                        title: "Erro!",
+                        text: "Erro ao Cadastrar Conta!",
+                        icon: "warning",
+                        button: "Oops!"
+                    })
+
+                } else if (params.get('certo') === 'TRUE') {
+
+                    swal({
+                        title: "Sucesso!",
+                        text: "Sucesso ao Cadastrar sua Conta!",
+                        icon: "success",
+                        button: "OK!"
+                    })
+                            .then(() => {
+                                history.back();
+                            })
+                }
+            })
+
+        </script>
     </body>
 </html>

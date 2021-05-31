@@ -1,6 +1,6 @@
 <%@page import="apoio.Formatacao"%>
 <%@page contentType="text/html" pageEncoding="ISO8859-1"%>
-<%@include file="menu.jsp" %>
+<%@include file="/menu/menu.jsp" %>
 <%@include file="logo.jsp" %>
 <!DOCTYPE html>
 <html>

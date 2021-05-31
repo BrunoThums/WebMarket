@@ -73,7 +73,7 @@
         %>
 
         <main class="form-signin">
-            <form method="post" name="atualizarUsuario" action="/WebMarket/acao?param=edPessoa">            
+            <form method="post" name="atualizarUsuario" action="/WebMarket/acao?param=editarPessoa">            
                 <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
                 <script language="JavaScript" src="../js/validaLogin.js"></script>
                 <h1 class="h3 mb-3 fw-normal">Atualizar conta</h1>

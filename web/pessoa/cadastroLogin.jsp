@@ -1,10 +1,11 @@
 <%@page import="entidade.Pessoa"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@include file="../logo.jsp" %>
 
 <!DOCTYPE html>
 <html>
     <head>
-        <%@include file="../logo.jsp" %>
+        
         <style> 
             <%--Sombras no texto--%>
             .a{
@@ -92,6 +93,7 @@
 
         <!-- Custom styles for this template -->
         <link href="/WebMarket/css/signin.css" rel="stylesheet">
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     </head>
     <body class="text-center">
 
@@ -104,8 +106,6 @@
             pessoa.email = "";
             pessoa.endereco = "";
             pessoa.telefone = "";
-
-
         %>
 
         <main class="form-signin">
@@ -202,11 +202,40 @@
                 <h6 class="a">Campos com o "*" são obrigatórios</h6>
                 <%--Voltar para login--%>
                 <div class="text-center">
-                    <a class="a" href="../index.jsp">Voltar</a> 
+                    <a class="a" href="../login.jsp">Voltar</a> 
                 </div>
                 <%--Copyrights XingoLingo--%>
                 <p class="mt-5 mb-3 text-muted">&copy;XingoLingo 2021</p>
             </form>
+                <script>
+
+                document.addEventListener('readystatechange', () => {
+
+                    if (document.readyState !== 'complete')
+                        return;
+
+                    const params = new URL(location.href).searchParams;
+
+                    if (params.get('erro') === 'ERRO') {
+                        swal({
+                            title: "Vishhhh",
+                            text: "Algum campo não foi preenchido corretamente",
+                            icon: "warning",
+                            button: "Vou arrumar aqui, pode deixar"
+                        });
+
+                    } else if (params.get('certo') === 'TRUE') {
+                        swal({
+                            title: "YEY! Cadastro completo!",
+                            text: "Agora você é um de nós :D",
+                            icon: "success",
+                            button: "Mazá! To só pelo pczão agora"
+                        });
+                    }
+                });
+
+
+            </script>
         </main>
 
     </body>

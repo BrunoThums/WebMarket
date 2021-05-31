@@ -5,6 +5,11 @@ import apoio.IDAO;
 import entidade.Produto;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.JasperRunManager;
 
 public class ProdutoDao implements IDAO<Produto> {
 
@@ -15,16 +20,18 @@ public class ProdutoDao implements IDAO<Produto> {
         try {
             Statement stm = ConexaoBD.getInstance().getConnection().createStatement();
 
-            String sql = "INSERT INTO produto VALUES"
-                    + "default,"
+            String sql = "INSERT INTO produto VALUES "
+                    + "(default,"
                     + "'" + o.descricao + "',"
                     + "'" + o.valor + "',"
                     + "'" + o.estoque + "',"
-                    + "'" + o.unidade + "',"
                     + "'" + o.id_categoria + "',"
                     + "'" + o.ativo + "',"
-                    + " 'now()',"
-                    + "' null '";
+                    + " now(),"
+                    + " now(),"
+                    + "'" + o.nome + "',"
+                    + "'" + o.file + "'"
+                    + ")";
 
             System.out.println("SQL: " + sql);
 
@@ -43,13 +50,20 @@ public class ProdutoDao implements IDAO<Produto> {
             Statement stm = ConexaoBD.getInstance().getConnection().createStatement();
 
             String sql = "UPDATE produto SET "
-                    + "descricao=" + o.descricao + ","
-                    + "valor=" + o.valor + ","
-                    + "quantidade=" + o.estoque + ","
-                    + "unidade=" + o.unidade + ","
-                    + "id_categoria=" + o.id_categoria + ","
-                    + "ativo=" + o.ativo + " "
-                    + "WHERE id= " + o.id;
+                    + "descricao='" + o.descricao + "',"
+                    + "nome ='" + o.nome + "', "
+                    + "valor='" + o.valor + "',"
+                    + "estoque='" + o.estoque + "',"
+                    + "id_categoria='" + o.id_categoria + "',"
+                    + "ativo='" + o.ativo + "', "
+                    + "updated_at= now()";
+            System.out.println(o.file);
+            if (o.file == null || o.file.length() >= 0) {
+                sql += ", file = '" + o.file + "'"
+                        + " WHERE id= " + o.id;
+            } else {
+                sql += " WHERE id = " + o.id;
+            }
 
             System.out.println("SQL: " + sql);
 
@@ -68,7 +82,7 @@ public class ProdutoDao implements IDAO<Produto> {
         try {
             Statement stm = ConexaoBD.getInstance().getConnection().createStatement();
 
-            String sql = "UPDATE produto SET ativo = N WHERE id=" + id;
+            String sql = "UPDATE produto SET ativo = false WHERE id=" + id;
             System.out.println("SQL: " + sql);
 
             int resultado = stm.executeUpdate(sql);
@@ -80,11 +94,12 @@ public class ProdutoDao implements IDAO<Produto> {
             return e.toString();
         }
     }
-    
+
+    @Override
     public ArrayList<Produto> consultarTodos() {
-        String sql = "SELECT * FROM produto WHERE status <> N";
+        String sql = "SELECT * FROM produto";
         try {
-            ResultSet result = ConexaoBD.getInstance().getConnection().createStatement().executeQuery(sql);
+            result = ConexaoBD.getInstance().getConnection().createStatement().executeQuery(sql);
             ArrayList<Produto> produto = new ArrayList<>();
             while (result.next()) {
                 produto.add(Produto.from(result));
@@ -106,28 +121,40 @@ public class ProdutoDao implements IDAO<Produto> {
 
     @Override
     public ArrayList<Produto> consultar(String criterio) {
-        String sql = "SELECT * FROM produto WHERE '%" + criterio + "%' ORDER BY descricao";
+        return consultarProdAndCategAndPreco(criterio, null, null);
+    }
+
+    public ArrayList<Produto> consultarProdAndCategAndPreco(String pesquisa, String id_categoria, String valor) {
+        String sql = "SELECT * "
+                + "FROM produto p "
+                + "WHERE p.nome ILIKE '%" + pesquisa + "%' ";
+
+        if (id_categoria != null && id_categoria.matches("^\\d+$")) {
+            sql += " AND p.id_categoria =" + id_categoria;
+        }
+        if (valor != null && valor.matches("^\\d+$") && Integer.parseInt(valor) > 0) {
+            sql += " AND valor > " + valor;
+        }
+        ArrayList<Produto> produto = new ArrayList<>();
+
         try {
-            ResultSet result = ConexaoBD.getInstance().getConnection().createStatement().executeQuery(sql);
-            ArrayList<Produto> produto = new ArrayList<>();
+
+            result = ConexaoBD.getInstance().getConnection().createStatement().executeQuery(sql);
             while (result.next()) {
                 produto.add(Produto.from(result));
             }
-            if (produto.isEmpty()) {
-                return null;
-            }
             return produto;
         } catch (Exception e) {
-            System.out.println("Erro ao consultar produtos: " + e);
+            System.out.println("Erro ao consultar produtos com categorias: " + e);
         }
-        return null;
+        return produto;
     }
 
     @Override
     public Produto consultarId(int id) {
-    String sql = "SELECT * FROM produto WHERE id=" + id;
+        String sql = "SELECT * FROM produto WHERE id=" + id;
         try {
-            ResultSet result = ConexaoBD.getInstance().getConnection().createStatement().executeQuery(sql);
+            result = ConexaoBD.getInstance().getConnection().createStatement().executeQuery(sql);
             if (result.next()) {
                 return Produto.from(result);
             }
@@ -141,6 +168,44 @@ public class ProdutoDao implements IDAO<Produto> {
     @Override
     public boolean consultar(Produto o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public byte[] gerarRelatorio(String ativo) {
+        try {
+            Connection conn = ConexaoBD.getInstance().getConnection();
+
+            JasperReport relatorio = JasperCompileManager.compileReport(getClass().getResourceAsStream("/relatorios/ListaProduto.jrxml"));
+
+            Map parameters = new HashMap();
+            parameters.put("ativo", ativo);
+
+            byte[] bytes = JasperRunManager.runReportToPdf(relatorio, parameters, conn);
+
+            return bytes;
+        } catch (Exception e) {
+            System.out.println("erro ao gerar relatorio: " + e);
+        }
+        return null;
+    }
+
+    public byte[] gerarRelatorioValor(Double valorIni, Double valorFinal) {
+        try {
+            Connection conn = ConexaoBD.getInstance().getConnection();
+
+            JasperReport relatorio = JasperCompileManager.compileReport(getClass().getResourceAsStream("/relatorios/RelatorioDePrecos.jrxml"));
+
+            Map parameters = new HashMap();
+            parameters.put("valorIni", valorIni);
+            parameters.put("valorFinal", valorFinal);
+           
+
+            byte[] bytes = JasperRunManager.runReportToPdf(relatorio, parameters, conn);
+
+            return bytes;
+        } catch (Exception e) {
+            System.out.println("erro ao gerar relatorio: " + e);
+        }
+        return null;
     }
 
 }

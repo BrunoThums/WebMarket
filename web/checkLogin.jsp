@@ -1,6 +1,6 @@
 <%
-            String email = (String) session.getAttribute("email");
-            if (email == null) {
+            String mail = (String) session.getAttribute("email");
+            if (mail == null) {
                 System.out.println("Index: Conta Não Logada");
                 response.sendRedirect("/WebMarket/login.jsp");
             }

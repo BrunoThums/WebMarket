@@ -1,9 +1,3 @@
-<%-- 
-    Document   : listagemPessoas
-    Created on : 4 de abr de 2021, 20:41:13
-    Author     : usuario
---%>
-<%@include file="../menu.jsp" %>
 <%@page import="dao.PessoaDao"%>
 <%@page import="entidade.Pessoa"%>
 <%@page import="java.util.ArrayList"%>
@@ -12,6 +6,7 @@
 <html>
     
     <head>
+        <%@include file="../menu/menu.jsp" %>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" 
               integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" 
@@ -19,13 +14,13 @@
         <title>XL - Pessoas</title>
     </head>
     <body>
-        <h1>Listagem de Pessoas</h1>
+        <h1 style="text-align: center;">Listagem de Pessoas</h1>
 
         <%
             ArrayList<Pessoa> listagemPessoas = new PessoaDao().consultarTodos();
         %>
 
-        <div class="table-responsive">
+        <div style="text-align: center";class="table-responsive">
             <table class="table table-striped table-sm">
                 <th>Editar</th>
                 <th>Excluir</th>
@@ -44,7 +39,7 @@
                 
                 <tr>
                     <td><a href='/WebMarket/pessoa/editaConta.jsp?id=<%= c.id%>'><i class="far fa-edit center"></i></a></td>
-                    <td><a href='/WebMarket/acao?param=exPessoa&id=<%= c.id%>'><i class="far fa-trash-alt"></i></a></td>
+                    <td><a href='/WebMarket/acao?param=excluirPessoa&id=<%= c.id%>'><i class="far fa-trash-alt"></i></a></td>
                     <td><%= c.id%></td>                
                     <td><%= c.nome%></td>
                     <td><%= c.email%></td>
@@ -60,6 +55,6 @@
         </div>
         <br>
         <br>
-        <a href='../index.jsp'>Voltar</a>
+        <a href='../index.jsp' style="text-align: center">Voltar</a>
     </body>
 </html>

@@ -5,6 +5,16 @@ import apoio.IDAO;
 import entidade.Categoria;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import javax.swing.JOptionPane;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.JasperRunManager;
+import net.sf.jasperreports.view.JasperViewer;
 
 public class CategoriaDao implements IDAO<Categoria> {
 
@@ -105,7 +115,7 @@ public class CategoriaDao implements IDAO<Categoria> {
 
     @Override
     public ArrayList<Categoria> consultar(String criterio) {
-        String sql = "SELECT * FROM categoria WHERE '%" + criterio + "%' ORDER BY descricao";
+        String sql = "SELECT * FROM categoria WHERE descricao ILIKE '%" + criterio + "%' ORDER BY descricao";
         try {
             ResultSet result = ConexaoBD.getInstance().getConnection().createStatement().executeQuery(sql);
             ArrayList<Categoria> categoria = new ArrayList<>();
@@ -142,4 +152,25 @@ public class CategoriaDao implements IDAO<Categoria> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    public byte[] gerarRelatorio(String nome) {
+        try {
+            Connection conn = ConexaoBD.getInstance().getConnection();
+            // Compila o relatorio
+            JasperReport relatorio = JasperCompileManager.compileReport(getClass().getResourceAsStream("/relatorios/listagem_categoria.jrxml"));
+
+            // Mapeia campos de parametros para o relatorio, mesmo que nao existam
+            Map parametros = new HashMap();
+            parametros.put("nome", nome);
+
+            // Executa relatoio
+            byte[] impressao = JasperRunManager.runReportToPdf(relatorio, parametros, conn);
+
+            // Exibe resultado em video
+            return impressao;
+        } catch (JRException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao gerar relatório: " + e);
+        }
+        return null;
+    }
 }
+

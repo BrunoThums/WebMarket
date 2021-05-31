@@ -1,7 +1,7 @@
-<%@page import="servlet.pesquisa"%>
 <%@page import="entidade.Categoria"%>
 <%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@include file="../menu/menu.jsp" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -10,61 +10,51 @@
     </head>
     <body>
 
-        <h1>Pesquisa de categorias</h1>
+        <h1 style="text-align: center;">Pesquisa de categorias</h1>
+        <form method="post" style="text-align: center;" action="/WebMarket/pesquisa?param=pesquisar">
 
-        <form method="post" action="/WebMarket/pesquisa?param=pesquisar">
+            <input type="text" name="busca" placeholder="Pesquisa senhor" >
 
-            <input type="text" name="busca" placeholder="Digite o que deseja pesquisar">
-          
             <input type="submit" value="Pesquisar">
+
 
         </form>
 
-        <%            ArrayList<Categoria> categoria = (ArrayList) request.getAttribute("categoriasPesquisa");
-
-            // testar se obj esta nulo.
-            // quando viemos do Menu (direto), não há obj em categoriasPesquisa, logo, o cast será NULL
-            if (categoria != null) {
-
-                if (categoria.size() == 0) {
-        %>  
-        <p>Nenhum resultado encontrado.</p>
-
-        <%
-        } else {
+        <%            ArrayList<Categoria> listCateg = (ArrayList) request.getAttribute("categoriasPesquisa");
         %>
-        <h2>Resultados</h2>
 
-        <div class="table-responsive">
-            <table class="table table-striped table-sm">
+        <div class="table-responsive" style="text-align: center; padding-top: 20px; width: 90%; margin: auto" >
+            <table class="table table-bordered table-striped table-sm">
+                <th>Editar</th>
+                <th>Excluir</th>
                 <th>Id</th>
                 <th>Descrição</th>
                 <th>Criado Em</th>
                 <th>Atualizado Em</th>
                 <th>Ativo</th>
+                    <%
+                        if (listCateg == null) {
+                            out.print("Não há categorias para listar");
+                        } else {
+                            for (int i = 0; i < listCateg.size(); i++) {
+                                Categoria c = listCateg.get(i);
+                    %>
 
-                <%
-                    for (int i = 0; i < categoria.size(); i++) {
-                        Categoria categ = categoria.get(i);
-                %>
-                <tr>
-                    <td><a href='/WebApp2021A/acao?param=edCategoria&id=<%= categ.id%>'><%= categ.id%></a></td>                
-                    <td><%= categ.descricao%></td>
-                    <td><%= categ.criado_em%></td>
-                    <td><%= categ.atualizado_em%></td>
-                    <td><%= categ.ativo%></td>
+                <tr >
+                    <td><a href='/WebMarket/Categoria?param=editarCategoria&id=<%= c.id%>'><i class="far fa-edit center"></i></a></td>
+                    <td><a href='/WebMarket/Categoria?param=excluirCategoria&id=<%= c.id%>'><i class="far fa-trash-alt"></i></a></td>
+                    <td><%= c.id%></td>                
+                    <td><%= c.descricao%></td>
+                    <td><%= c.criado_em%></td>
+                    <td><%= c.atualizado_em%></td>
+                    <td><%= c.ativo%></td>
                 </tr>
-
                 <%
+                        }
                     }
                 %>
 
             </table>
         </div>
-        <%
-                }
-            }
-        %>
-
     </body>
 </html>

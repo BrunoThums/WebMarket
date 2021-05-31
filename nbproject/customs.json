@@ -3,6 +3,15 @@
         "li": {}
     },
     "attributes": {
-        "integrity": {}
+        "<input": {},
+        "integrity": {},
+        ";": {},
+        ",": {},
+        "type": {
+            "context": "form"
+        },
+        "value": {
+            "context": "form"
+        }
     }
 }

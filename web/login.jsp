@@ -16,15 +16,15 @@
         <!-- Logo na página-->
         <link rel="shortcut icon" href="logo.ico" type="image/x-icon">
         <link rel="icon" href="logo.ico" type="image/x-icon">
-        
+
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="">
         <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
         <meta name="generator" content="Hugo 0.80.0">
-        
+
         <title>XL - Login</title>
-        
+
         <!-- Bootstrap core CSS | Estilização-->
         <link href="/WebMarket/css/bootstrap.min.css" rel="stylesheet">
 
@@ -106,6 +106,38 @@
                        id="senha" 
                        class="form-control" 
                        placeholder="Senha" required>
+
+                <script>
+
+                    document.addEventListener('readystatechange', () => {
+                        if (document.readyState !== 'complete')
+                            return;
+
+                        const params = new URL(location.href).searchParams;
+                        if (params.get('erro') === 'ERRO') {
+                            swal({
+                                title: "Ihhhhh!",
+                                text: "Usuário ou senha não conferem!",
+                                icon: "warning",
+                                button: "Tentar novamente"
+                            });
+                        } else if (params.get('certo') === 'TRUE') {
+                            swal({
+                                title: "YEEEEEEY!",
+                                text: "Usuário e senha conferem!",
+                                icon: "success",
+                                buttons: false,
+                                timer: 2000
+                            }).then(() => {
+                                location = '/WebMarket/index.jsp'
+                            });
+                        }
+
+                    })
+
+
+                </script>
+
                 <button class="myButton" 
                         type="submit" 
                         value="logar">

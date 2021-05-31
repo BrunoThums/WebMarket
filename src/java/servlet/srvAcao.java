@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -63,10 +64,30 @@ public class srvAcao extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        System.out.println("Entrou no Get");
 
         String param = request.getParameter("param");
-        if (param.equals("exPessoa")) {
+
+        //LOGOUT - Tirar a paessoa da sessão ao fazer logout
+        if (param.equals("logout")) {
+            HttpSession sessao = request.getSession();
+            sessao.invalidate();
+            response.sendRedirect("/WebMarket/login.jsp");
+        } //DESATIVAR CONTA
+        else if (param.equals("desativarPessoa")) {
+            String id = request.getParameter("id");
+            pessoa = new PessoaDao().consultarId(Integer.parseInt(id));
+
+            if (pessoa != null) {
+                PessoaDao desativar = new PessoaDao();
+                desativar.excluir(Integer.parseInt(id));
+                encaminharPagina("login.jsp", request, response);
+            } else {
+                encaminharPagina("erro.jsp", request, response);
+            }
+        }
+
+        //EXCLUSÃO DE PESSOA
+        if (param.equals("excluirPessoa")) {
             String id = request.getParameter("id");
             pessoa = new PessoaDao().consultarId(Integer.parseInt(id));
 
@@ -78,31 +99,7 @@ public class srvAcao extends HttpServlet {
             } else {
                 System.out.println("Erro ao excluir cliente");
             }
-
         }
-        if (param.equals("mudarSenha")) {
-            PessoaDao pessoaDao = new PessoaDao();
-            HttpSession sessao = ((HttpServletRequest) request).getSession();
-            String senha = request.getParameter("senha");
-            String senhaNova = request.getParameter("senhaNova");
-            String confirmarSenha = request.getParameter("confirmarSenha");
-
-            Pessoa pessoa = (Pessoa) sessao.getAttribute("usuarioLogado");
-
-            pessoa = pessoaDao.consultarEmail(pessoa.email);
-
-            if (!senha.isEmpty() && !senhaNova.isEmpty() && !confirmarSenha.isEmpty()) {
-
-                if (Cripto.eIgual(pessoa.senha, senha) && senhaNova.equals(confirmarSenha)) {
-                    pessoa.senha = Cripto.criptografar(senhaNova);
-                    pessoaDao.atualizar(pessoa);
-                    System.out.println("pessoa atualizada com sucesso");
-                }
-            } else {
-                encaminharPagina("erro.jsp", request, response);
-            }
-        } 
-
     }
 
     /**
@@ -116,13 +113,13 @@ public class srvAcao extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        System.out.println("Entrou no post");
 
         String param = request.getParameter("param");
 
         // SALVAR PESSOA
         if (param.equals("cadastroPessoa")) {
-            Pessoa p = new Pessoa();
+            Pessoa pessoa = new Pessoa();
+            PessoaDao pessoaDAO = new PessoaDao();
             int id = Integer.parseInt(request.getParameter("id"));
             String nome = request.getParameter("nome");
             String email = request.getParameter("email");
@@ -131,34 +128,32 @@ public class srvAcao extends HttpServlet {
             String telefone = request.getParameter("telefone");
 
             if (!nome.matches("^[A-Za-z ]{3,45}$") || nome.isEmpty()) {
-                System.out.println(nome);
+                response.sendRedirect("/WebMarket/pessoa/cadastroLogin.jsp?erro=NOME_INVALIDO");
                 return;
             } else if (!Validacao.isEmail(email)) {
-                System.out.println("O email está invalido");
+                response.sendRedirect("/WebMarket/pessoa/cadastroLogin.jsp?erro=EMAIL_INVALIDO");
                 return;
             } else if (!senha.matches("^.{8,22}$")) {
-                System.out.println(senha);
+                response.sendRedirect("/WebMarket/pessoa/cadastroLogin.jsp?erro=SENHA_INVALIDA");
                 System.out.println("A senha está inválida");
                 return;
             } else if (!telefone.matches("^((\\+\\d{1,2})?\\d{2})?\\d{9}$")) {
-                System.out.println(telefone);
+                response.sendRedirect("/WebMarket/pessoa/cadastroLogin.jsp?erro=TELEFONE_INVALIDO");
                 System.out.println("o telefone está inválido");
             } else if (!nome.isEmpty() /*&& !senha.isEmpty()*/ && !email.isEmpty() && !telefone.isEmpty()) {
-                p.id = id;
-                p.nome = nome;
-                p.email = email;
-                p.senha = Cripto.criptografar(senha);
-                p.endereco = endereco;
-                p.telefone = telefone;
-                p.ativo = "Y";
+                pessoa.id = id;
+                pessoa.nome = nome;
+                pessoa.email = email;
+                pessoa.senha = Cripto.criptografar(senha);
+                pessoa.endereco = endereco;
+                pessoa.telefone = telefone;
+                pessoa.ativo = "Y";
             }
             String retorno = null;
-            if (id == 0) {
-                retorno = new PessoaDao().salvar(p);
-                encaminharPagina("login.jsp", request, response);
-                System.out.println("O usuário foi cadastrado");
+            if (pessoaDAO.salvar(pessoa) == null) {
+                response.sendRedirect("/WebMarket/pessoa/cadastroLogin.jsp?certo=TRUE");
             } else {
-                
+                response.sendRedirect("/WebMarket/pessoa/cadastroLogin.jsp?erro=ERRO");
             }
         }
 
@@ -172,28 +167,27 @@ public class srvAcao extends HttpServlet {
                         .executeQuery("SELECT * FROM pessoa WHERE email = '" + email + "'");
 
                 if (!set.next()) {
-                    System.out.println("Erro no email");
-                    encaminharPagina("login.jsp", request, response);
+                    response.sendRedirect("/WebMarket/login.jsp?erro=ERRO");
                 }
 
                 if (Cripto.eIgual(set.getString("senha"), new String(senha))) {
+
                     pessoa.email = email;
-                    System.out.println("email cripto:" + email);
                     HttpSession sessao = ((HttpServletRequest) request).getSession();
 
                     sessao.setAttribute("usuarioLogado", pessoa);
                     sessao.setAttribute("email", email);
-                    encaminharPagina("index.jsp", request, response);
-                    System.out.println("Pessoa Autenticada");
+                    response.sendRedirect("/WebMarket/login.jsp?certo=TRUE");
                 } else {
-                    System.out.println("erro geral(?)");
-                    encaminharPagina("login.jsp", request, response);
+                    response.sendRedirect("/WebMarket/login.jsp?erro=ERRO");
                 }
 
             } catch (SQLException ex) {
                 Logger.getLogger(srvAcao.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else if (param.equals("edPessoa")) {
+
+            //EDITAR PESSOA
+        } else if (param.equals("editarPessoa")) {
             pessoa = new Pessoa();
             PessoaDao pessoaDao = new PessoaDao();
 
@@ -220,8 +214,32 @@ public class srvAcao extends HttpServlet {
                 encaminharPagina("/WebMarket/pessoa/listagemPessoas.jsp", request, response);
             }
 
-            
         }
+
+        //MUDAR SENHA
+        if (param.equals("mudarSenha")) {
+            PessoaDao pessoaDao = new PessoaDao();
+            HttpSession sessao = ((HttpServletRequest) request).getSession();
+            String senha = request.getParameter("senha");
+            String senhaNova = request.getParameter("senhaNova");
+            String confirmarSenha = request.getParameter("confirmarSenha");
+
+            Pessoa pessoa = (Pessoa) sessao.getAttribute("usuarioLogado");
+
+            pessoa = pessoaDao.consultarEmail(pessoa.email);
+
+            if (!senha.isEmpty() && !senhaNova.isEmpty() && !confirmarSenha.isEmpty()) {
+
+                if (Cripto.eIgual(pessoa.senha, senha) && senhaNova.equals(confirmarSenha)) {
+                    pessoa.senha = Cripto.criptografar(senhaNova);
+                    pessoaDao.atualizar(pessoa);
+                    response.sendRedirect("/WebMarket/pessoa/dadosConta.jsp");
+                }
+            } else {
+                encaminharPagina("erro.jsp", request, response);
+            }
+        }
+
     }
 
     /**
