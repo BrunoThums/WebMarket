@@ -80,15 +80,15 @@ public class svrPesquisa extends HttpServlet {
             encaminharPagina("categoria/pesquisaCategoria.jsp", request, response);
         }
 
-        if (param.equals("pesquisarProd")) {
+        if (param.equals("pesquisar_prod")) {
 
-            String criterio = request.getParameter("searchProd");
+            String criterio = request.getParameter("produtoPesquisa");
 
             ArrayList<Produto> produtos = new ProdutoDao().consultar(criterio);
 
-            request.setAttribute("campoProd", produtos);
+            request.setAttribute("produtoPesquisa", produtos);
 
-            encaminharPagina("index.jsp", request, response);
+            encaminharPagina("produto/pesquisaProduto.jsp", request, response);
         }
     }
 

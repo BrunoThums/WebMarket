@@ -3,6 +3,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include file="../checkLogin.jsp" %>
 <%@include file="../logo.jsp" %>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <!DOCTYPE html>
 <html>
@@ -18,7 +19,7 @@
         <!--musicão padrão de shopping-->
         <!--<div id="player">
             <audio autoplay hidden>
-                <source src="/WebMarket/menu/elevador.mp3" type="audio/mp3">
+                <source src="/WebMarket/menu/wiishop.mp3" type="audio/mp3">
                 If you're reading this, audio isn't supported. 
             </audio>
         </div>-->
@@ -72,13 +73,23 @@
                         <ul class="dropdown-menu animated fadeInLeft" role="menu">
                             <div class="dropdown-header"></div>
 
-                            <li><a href="/WebMarket/categoria/pesquisaCategoria.jsp" class="#pesqCategoria">Categoria</a></li>
-                            <li><a href="/WebMarket/produto/listagemProduto.jsp" class="#pesqProduto">Produto</a></li>
+                            <li><a href="/WebMarket/categoria/pesquisaCategoria.jsp?ativo=on" class="#pesqCategoria">Categoria</a></li>
+                            <li><a href="/WebMarket/produto/pesquisaProduto.jsp?ativo=on&ordem=ASC" class="#pesqProduto">Produto</a></li>
                         </ul>
                     </li>
-                    <!--<a href="/WebMarket/categoria/categoria.jsp" class="#categoria">Categoria</a></li>-->
-                    <li><a href="/WebMarket/categoria/categoria.jsp" class="#carrinho">Carrinho</a></li>
+                    <li class="dropdown">
+                        <a href="" class="dropdown-toggle #relatorios"  data-toggle="dropdown"> Relatórios<span class="caret"></span></a>
+                        <ul class="dropdown-menu animated fadeInLeft" role="menu">
+                            <div class="dropdown-header"></div>
+
+                            <li><a href="#" class="listaCategoria #relatorio">Categoria</a></li>
+                            <li><a href="#" class="listaProduto #relatorio">Produto</a></li>
+                            <li><a href="#" class="listaUsuario #relatorio">Usuário</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/WebMarket/checkout/checkout.jsp" class="#carrinho">Carrinho</a></li>
                     <li><a href="/WebMarket/pessoa/listagemPessoas.jsp" class="#usuarios">Usuários</a></li>
+
                 </ul>
             </nav>
             <!-- /#sidebar-wrapper -->
@@ -92,6 +103,91 @@
                 </button>
             </div>
 
+            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+            <script>
+                document.querySelector(".listaCategoria").addEventListener('click', () => {
+                    swal({
+                        title: "Gere o relatório de categorias de acordo com sua preferência:",
+                        buttons : {
+                            Y: 'Ativos',
+                            N: 'Inativos',
+                            todos: 'Todos'
+                        }
+                    }).then(ativo => {
+                        location.href = "/WebMarket/relatorios/listaCategoria.jsp?ativo=" + ativo;
+                    });
+                });
+                
+                document.querySelector(".listaProduto").addEventListener('click', () => {
+                    swal({
+                        title: "Gere o relatório de produtos de acordo com sua preferência",
+                        buttons: {
+                            Y: 'Ativos',
+                            N: 'Inativos',
+                            todos: 'Todos'
+                        }
+                    }).then(ativo => {
+                        location.href = "/WebMarket/relatorios/listaProduto.jsp?ativo=" + ativo;
+                    });
+                });
+                
+                document.querySelector(".listaUsuario").addEventListener('click', () => {
+                    swal({
+                        title: "Gere o relatório de usuários de acordo com sua preferência",
+                        buttons: {
+                            Y: 'Ativos',
+                            N: 'Inativos',
+                            todos: 'Todos'
+                        }
+                    }).then(ativo => {
+                        location.href = "/WebMarket/relatorios/listaUsuario.jsp?ativo=" + ativo;
+                    });
+                });
+                
+                
+                document.querySelector(".relCompra").addEventListener('click', async () => {
+                    const {value} = await Swal.fire({
+                        title: "Por favor insira uma data válida!",
+                        html: '<input class="sw-dataInicial" type="date">' +
+                                '<input class="sw-dataFinal" type="date">',
+                        preConfirm: () => {
+                            return [
+                                document.querySelector('.sw-dataInicial').value,
+                                document.querySelector('.sw-dataFinal').value
+                            ];
+                        }
+                    });
+                    
+                    const [dataInicial, dataFinal] = value;
+                    location.href = "/WebMarket/relatorios/relCompra.jsp?"
+                            + new URLSearchParams({
+                                dataInicial,
+                                dataFinal
+                            }).toString();
+                });
+                
+                
+                document.querySelector(".relProd").addEventListener('click', async () => {
+                    const {value} = await Swal.fire({
+                        title: "Filtrar Valores",
+                        html: '<div><input class="sw-valorIni" type="text" pattern="^([.0-9])*\d$" placeholder="Preço Inicial" >' +
+                                '<input class="sw-valorFinal" type="text" pattern="^([.0-9])*\d$" placeholder="Preço Final" >' +
+                                ' </div>',
+                        preConfirm: () => {
+                            return [
+                                document.querySelector('.sw-valorIni').value,
+                                document.querySelector('.sw-valorFinal').value
+                            ];
+                        }
+                    });
+                    const [valorIni, valorFinal] = value;
+                    location.href = "/WebMarket/relatorios/relValorProd.jsp?"
+                            + new URLSearchParams({
+                                valorIni,
+                                valorFinal
+                            }).toString();
+                });
+            </script>
             <!-- /#page-content-wrapper -->
 
         </div>

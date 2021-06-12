@@ -10,11 +10,8 @@ import java.util.Map;
 import javax.swing.JOptionPane;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.JasperRunManager;
-import net.sf.jasperreports.view.JasperViewer;
 
 public class CategoriaDao implements IDAO<Categoria> {
 
@@ -53,7 +50,8 @@ public class CategoriaDao implements IDAO<Categoria> {
 
             String sql = "UPDATE categoria SET "
                     + "descricao='" + categoria.descricao + "',"
-                    + "updated_at='now()' "
+                    + "updated_at='now()', "
+                    + "ativo='"+categoria.ativo+"' "
                     + "WHERE id='" + categoria.id + "'";
 
             int retorno = stm.executeUpdate(sql);
@@ -131,6 +129,25 @@ public class CategoriaDao implements IDAO<Categoria> {
         }
         return null;
     }
+    
+    public ArrayList<Categoria> consultaAvancada(String busca, String ativo) {
+        
+        String sql = "SELECT * FROM categoria WHERE descricao ILIKE '%" + busca + "%' AND ativo = '"+ativo+"' ORDER BY descricao";
+        try {
+            ResultSet result = ConexaoBD.getInstance().getConnection().createStatement().executeQuery(sql);
+            ArrayList<Categoria> categoria = new ArrayList<>();
+            while (result.next()) {
+                categoria.add(Categoria.from(result));
+            }
+            if (categoria.isEmpty()) {
+                return null;
+            }
+            return categoria;
+        } catch (Exception e) {
+            System.out.println("Erro ao consultar categorias: " + e);
+        }
+        return null;
+    }
 
     @Override
     public Categoria consultarId(int id) {
@@ -152,7 +169,45 @@ public class CategoriaDao implements IDAO<Categoria> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public byte[] gerarRelatorio(String nome) {
+    private ArrayList<Categoria> pesquisa(String criterio, String dataIni, String dataFim, String status, String ordem) {
+        String pesquisa = "SELECT * FROM "
+                + "categoria c, "
+                + "WHERE c.status = '" + status + "' ";
+        if (criterio != null && !criterio.isEmpty()) {
+            pesquisa += "AND ("
+                    + "c.descricao ILIKE '%" + criterio + "%');";
+        }
+        if ((dataIni != null && !dataIni.isEmpty()) && (dataFim != null && !dataFim.isEmpty())) {
+            pesquisa += " AND data BETWEEN '" + dataIni + "' and '" + dataFim + "' ";
+        }
+        if (ordem != null && !ordem.isEmpty()) {
+            if (ordem.equals("ASC")) {
+                pesquisa += "ORDER BY c.descricao ASC";
+            } else {
+                pesquisa += "ORDER BY c.kcalTotal DESC";
+            }
+            /*
+                rCres.setActionCommand("ASC");
+                rDesc.setActionCommand("DESC");
+             */
+        }
+        try {
+            ResultSet result = ConexaoBD.getInstance().getConnection().createStatement().executeQuery(pesquisa);
+            ArrayList<Categoria> categoria = new ArrayList<>();
+            while (result.next()) {
+                categoria.add(Categoria.from(result));
+            }
+            if (categoria.isEmpty()) {
+                return null;
+            }
+            return categoria;
+        } catch (Exception e) {
+            System.out.println("Erro ao consultar categorias: " + e);
+        }
+        return null;
+    }
+
+    public byte[] gerarRelatorio(String nome, String ativo) {
         try {
             Connection conn = ConexaoBD.getInstance().getConnection();
             // Compila o relatorio
@@ -161,6 +216,7 @@ public class CategoriaDao implements IDAO<Categoria> {
             // Mapeia campos de parametros para o relatorio, mesmo que nao existam
             Map parametros = new HashMap();
             parametros.put("nome", nome);
+            parametros.put("ativo", ativo);
 
             // Executa relatoio
             byte[] impressao = JasperRunManager.runReportToPdf(relatorio, parametros, conn);
@@ -173,4 +229,3 @@ public class CategoriaDao implements IDAO<Categoria> {
         return null;
     }
 }
-

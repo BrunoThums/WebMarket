@@ -5,6 +5,13 @@ import apoio.IDAO;
 import entidade.Pessoa;
 import java.util.ArrayList;
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
+import javax.swing.JOptionPane;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.JasperRunManager;
 
 public class PessoaDao implements IDAO<Pessoa> {
 
@@ -156,6 +163,27 @@ public class PessoaDao implements IDAO<Pessoa> {
 
         } catch (Exception e) {
             System.out.println("Erro ao consultar pessoas por ID: " + e);
+        }
+        return null;
+    }
+    public byte[] gerarRelatorio(String nome, String ativo ) {
+        try {
+            Connection conn = ConexaoBD.getInstance().getConnection();
+            // Compila o relatorio
+            JasperReport relatorio = JasperCompileManager.compileReport(getClass().getResourceAsStream("/relatorios/listagem_usuarios.jrxml"));
+
+            // Mapeia campos de parametros para o relatorio, mesmo que nao existam
+            Map parametros = new HashMap();
+            parametros.put("nome", nome);
+            parametros.put("ativo", ativo);
+
+            // Executa relatorio
+            byte[] impressao = JasperRunManager.runReportToPdf(relatorio, parametros, conn);
+
+            // Exibe resultado em video
+            return impressao;
+        } catch (JRException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao gerar relatório: " + e);
         }
         return null;
     }

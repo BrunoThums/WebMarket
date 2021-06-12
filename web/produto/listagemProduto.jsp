@@ -1,3 +1,6 @@
+<%@page import="dao.CategoriaDao"%>
+<%@page import="apoio.Formatacao"%>
+<%@page import="entidade.Categoria"%>
 <%@page import="dao.ProdutoDao"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="entidade.Produto"%>
@@ -6,7 +9,6 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <%@include file="/menu/menu.jsp" %>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" 
               integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" 
@@ -18,38 +20,37 @@
         <h1 class="h3 mb-3 fw-normal" >Listagem de Produtos</h1>
 
         <%
-            ArrayList<Produto> listProd = new ProdutoDao().consultarTodos();
+            ArrayList<Produto> listProd = new ProdutoDao().consultaAvancada("", "Y", "");
 
 
         %>
 
-        <div class="table-responsive">
-            <table class="table table-bordered table-sm table-dark">
+        <div class="table-responsive" style="text-align: center; padding-top: 20px; width: 90%; margin: auto" >
+            <table class="table table-bordered table-striped table-sm">
                 <th>Editar</th>
                 <th>Excluir</th>
                 <th>Id</th>
-                <th>Descrição</th>
+                <th>Categoria</th>
                 <th>Nome</th>
                 <th>Valor</th>
-                <th>Quantidade</th>
-                <th>Id da Categoria</th>
+                <th>Estoque</th>
                 <th>Ativo</th>
-                    <%                        if (listProd == null) {
-                            out.print("NAO CONTEM NADA");
+                    <%  if (listProd == null) {
+                            out.print("Não há produtos para listar");
                         } else {
                             for (int i = 0; i < listProd.size(); i++) {
                                 Produto c = listProd.get(i);
                     %>
 
                 <tr class="table-light">
-                    <td><a href='./cadastroProduto.jsp?id=<%= c.id%>'><i class="far fa-edit center"></i></a></td>
-                    <td><a href='/WebMarket/Produto?param=exProduto&id=<%= c.id%>'><i class="far fa-trash-alt"></i></a></td>
-                    <td><%= c.id%></td>                
-                    <td><%= c.descricao%></td>
+                    <td><a href='/WebMarket/srvProduto?param=editarProduto&id=<%= c.id%>'><i class="far fa-edit center"></i></a></td>
+                    <td><a href='/WebMarket/srvProduto?param=excluirProduto&id=<%= c.id%>'><i class="far fa-trash-alt"></i></a></td>
+                    <td><%= c.id%></td>   
+                    <% Categoria cat = new CategoriaDao().consultarId(c.id_categoria); %>
+                    <td><%= cat.descricao %></td>
                     <td><%= c.nome%></td>
-                    <td><%= c.valor%></td>
+                    <td><%= Formatacao.formatarDecimal(c.valor)%></td>
                     <td><%= c.estoque%></td>
-                    <td><%= c.id_categoria%></td>
                     <td><%= c.ativo%></td>
                 </tr>
                 <%

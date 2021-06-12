@@ -109,7 +109,7 @@
                 width: 94%;
                 height: 2px;
 
-                border-top: 1px dashed #12121266;
+                border-top: 1px dashed;
             }
 
         </style>
@@ -167,9 +167,9 @@
 
             document.addEventListener('readystatechange', () => {
                 if (document.readyState !== "complete")
-                    return
+                    return;
 
-                const params = new URL(location.href).searchParams
+                const params = new URL(location.href).searchParams;
 
                 if (params.get('erro') === 'ERRO') {
 
@@ -178,7 +178,7 @@
                         text: "Erro ao Cadastrar Conta!",
                         icon: "warning",
                         button: "Oops!"
-                    })
+                    });
 
                 } else if (params.get('certo') === 'TRUE') {
 
@@ -190,9 +190,9 @@
                     })
                             .then(() => {
                                 history.back();
-                            })
+                            });
                 }
-            })
+            });
 
         </script>
     </body>

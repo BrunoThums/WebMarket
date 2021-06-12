@@ -69,17 +69,14 @@ public class srvCategoria extends HttpServlet {
             String id = request.getParameter("id");
 
             Categoria categoria = (Categoria) new CategoriaDao().consultarId(Integer.parseInt(id));
-            System.out.println(categoria);
 
             if (categoria != null) {
 
                 request.setAttribute("objetoCategoria", categoria);
-                
                 encaminharPagina("categoria/categoria.jsp", request, response);
             } else {
                 response.sendRedirect("categoria/categoria.jsp?erro=DESCRICAO_INVALIDA");
             }
-
             //EXCLUIR CATEGORIA
         } else if (param.equals("excluirCategoria")) {
             String id = request.getParameter("id");
@@ -88,9 +85,9 @@ public class srvCategoria extends HttpServlet {
             if (categoria != null) {
                 CategoriaDao excluir = new CategoriaDao();
                 excluir.excluir(Integer.parseInt(id));
-                encaminharPagina("categoria/categoria.jsp", request, response);
+                response.sendRedirect("categoria/categoria.jsp?certo=EXCLUIDO");
             } else {
-                response.sendRedirect("categoria/categoria.jsp?erro=NAO_DEU");
+                response.sendRedirect("categoria/categoria.jsp?erro=NAO_EXCLUIU");
             }
         }
     }
@@ -115,7 +112,13 @@ public class srvCategoria extends HttpServlet {
             categoria = new Categoria();
             int id = Integer.parseInt(request.getParameter("id"));
             String descricao = request.getParameter("descricao");
-            String ativo = request.getParameter("ativo");
+            boolean pegaAtivo = Boolean.parseBoolean((request.getParameter("ativo")!=null?"true":"false"));
+            String ativo = "";
+            if(pegaAtivo==true){
+                ativo = "Y";
+            } else if (pegaAtivo==false){
+                ativo = "N";
+            }
             
 
             if (descricao.isEmpty() && !descricao.matches("^.(a-zA-Z){3,45}$")) {
@@ -124,7 +127,7 @@ public class srvCategoria extends HttpServlet {
             } else {
                 categoria.id = id;
                 categoria.descricao = descricao;
-                categoria.ativo = "Y";
+                categoria.ativo = ativo;
             }
 
             if (id == 0) {
@@ -133,7 +136,7 @@ public class srvCategoria extends HttpServlet {
                 }
             } else {
                 categoriaDAO.atualizar(categoria);
-                encaminharPagina("categoria/categoria.jsp?certo=ATUALIZA", request, response);
+                response.sendRedirect("categoria/categoria.jsp?certo=ATUALIZADO");
             }
         }
         

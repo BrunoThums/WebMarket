@@ -57,7 +57,6 @@ public class ProdutoDao implements IDAO<Produto> {
                     + "id_categoria='" + o.id_categoria + "',"
                     + "ativo='" + o.ativo + "', "
                     + "updated_at= now()";
-            System.out.println(o.file);
             if (o.file == null || o.file.length() >= 0) {
                 sql += ", file = '" + o.file + "'"
                         + " WHERE id= " + o.id;
@@ -82,7 +81,7 @@ public class ProdutoDao implements IDAO<Produto> {
         try {
             Statement stm = ConexaoBD.getInstance().getConnection().createStatement();
 
-            String sql = "UPDATE produto SET ativo = false WHERE id=" + id;
+            String sql = "UPDATE produto SET ativo = 'N' WHERE id=" + id;
             System.out.println("SQL: " + sql);
 
             int resultado = stm.executeUpdate(sql);
@@ -122,6 +121,26 @@ public class ProdutoDao implements IDAO<Produto> {
     @Override
     public ArrayList<Produto> consultar(String criterio) {
         return consultarProdAndCategAndPreco(criterio, null, null);
+    }
+
+    public ArrayList<Produto> consultaAvancada(String pesquisa, String ativo, String ordem) {
+        String sql = "SELECT * "
+                + "FROM produto "
+                + "WHERE nome ILIKE '%" + pesquisa + "%' AND ativo = '" + ativo + "' ORDER BY nome " + ordem;
+
+        ArrayList<Produto> produto = new ArrayList<>();
+
+        try {
+
+            result = ConexaoBD.getInstance().getConnection().createStatement().executeQuery(sql);
+            while (result.next()) {
+                produto.add(Produto.from(result));
+            }
+            return produto;
+        } catch (Exception e) {
+            System.out.println("Erro na consulta avançada: " + e);
+        }
+        return produto;
     }
 
     public ArrayList<Produto> consultarProdAndCategAndPreco(String pesquisa, String id_categoria, String valor) {
@@ -170,18 +189,21 @@ public class ProdutoDao implements IDAO<Produto> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public byte[] gerarRelatorio(String ativo) {
+    public byte[] gerarRelatorio(String nome, String ativo) {
         try {
             Connection conn = ConexaoBD.getInstance().getConnection();
+            // Compila o relatorio
+            JasperReport relatorio = JasperCompileManager.compileReport(getClass().getResourceAsStream("/relatorios/listagem_produto.jrxml"));
 
-            JasperReport relatorio = JasperCompileManager.compileReport(getClass().getResourceAsStream("/relatorios/ListaProduto.jrxml"));
+            // Mapeia campos de parametros para o relatorio, mesmo que nao existam
+            Map parametros = new HashMap();
+            parametros.put("nome", nome);
+            parametros.put("ativo", ativo);
+            // Executa relatoio
+            byte[] impressao = JasperRunManager.runReportToPdf(relatorio, parametros, conn);
 
-            Map parameters = new HashMap();
-            parameters.put("ativo", ativo);
-
-            byte[] bytes = JasperRunManager.runReportToPdf(relatorio, parameters, conn);
-
-            return bytes;
+            // Exibe resultado em video
+            return impressao;
         } catch (Exception e) {
             System.out.println("erro ao gerar relatorio: " + e);
         }
@@ -197,7 +219,6 @@ public class ProdutoDao implements IDAO<Produto> {
             Map parameters = new HashMap();
             parameters.put("valorIni", valorIni);
             parameters.put("valorFinal", valorFinal);
-           
 
             byte[] bytes = JasperRunManager.runReportToPdf(relatorio, parameters, conn);
 

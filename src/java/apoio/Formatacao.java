@@ -35,6 +35,12 @@ public class Formatacao {
         return (formatter.format(valor));
     }
 
+    public static String formatarDecimal(String valor) {
+        NumberFormat formatter = new DecimalFormat("###0.00");
+        String value = formatter.format(valor);
+        return value;
+    }
+    
     public static JFormattedTextField getTelefone() {
         return getFormatado("(##) ####-####");
     }

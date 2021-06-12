@@ -15,12 +15,9 @@ public class CarrinhoDao implements IDAO<Carrinho> {
         try {
             Statement stm = ConexaoBD.getInstance().getConnection().createStatement();
 
-            String sql = "INSERT INTO carrinho "
-                    + "default,"
-                    + "'" + o.quant + "',"
-                    + "'" + o.precoTotal + "',"
-                    + "'" + o.id_produto + "',"
-                    + "'now()'";
+            String sql = "INSERT INTO carrinho values ("
+                    + "" + o.id_compra + ","
+                    + "" + o.id_item + ")";
 
             System.out.println("SQL: " + sql);
 
@@ -39,10 +36,9 @@ public class CarrinhoDao implements IDAO<Carrinho> {
             Statement stm = ConexaoBD.getInstance().getConnection().createStatement();
 
             String sql = "UPDATE carrinho SET "
-                    + "quant=" + o.quant + ","
-                    + "precoTotal=" + o.precoTotal + ","
-                    + "id_produto=" + o.id_produto + " "
-                    + "WHERE id= " + o.id;
+                    + "id_compra='" + o.id_compra + "',"
+                    + "id_item='" + o.id_item + "',"
+                    + "WHERE id_compra= " + o.id_compra;
 
             System.out.println("SQL: " + sql);
 

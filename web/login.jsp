@@ -5,8 +5,8 @@
     <head>
         <style>
             body {
-                <%--Plano de Fundo do Bonoro --%>
-                background-image: url(https://veja.abril.com.br/wp-content/uploads/2019/11/49060321876_0bbe27bb64_o.jpg);
+                <%--Plano de Fundo do mimi --%>
+                background-image: url(https://preview.redd.it/02avbubxp1521.jpg?auto=webp&s=bdbe94267d062cc40d4c93aeb3770d4b8b5368c8);
                 background-repeat: no-repeat;
                 background-attachment: fixed;
                 background-size: 100% 100%;
@@ -133,7 +133,7 @@
                             });
                         }
 
-                    })
+                    });
 
 
                 </script>

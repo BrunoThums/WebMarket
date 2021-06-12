@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="listagemCategoria" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="56826070-c6a5-4e5f-be92-823fa350bfc0">
-	<property name="com.jaspersoft.studio.data.sql.tables" value="Y2F0ZWdvcmlhICwxNSwxNSw5YzBhZjJhMC02MDE2LTQzZjktOWNmOS1mYWM2Y2U0MjMzMGI7"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value="Y2F0ZWdvcmlhICwxNSwxNSw5OWEyMjY3Ny1jMGJlLTQzNjYtOGE5NS1jNWZlODQzMzVhMWI7"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WebMarket"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="405"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="581"/>
 	<parameter name="nome" class="java.lang.String"/>
+	<parameter name="ativo" class="java.lang.String"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT *
 FROM categoria
-ORDER BY categoria.descricao DESC]]>
+WHERE 
+	  ( 
+	 $P{ativo} IS NULL  
+	 OR categoria.ativo = $P{ativo}) 
+ORDER BY categoria.descricao ASC]]>
 	</queryString>
 	<field name="id" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="id"/>
@@ -63,18 +70,20 @@ ORDER BY categoria.descricao DESC]]>
 	<columnHeader>
 		<band height="30" splitType="Stretch">
 			<staticText>
-				<reportElement x="20" y="0" width="60" height="30" uuid="9278ce2a-bbfc-4351-b340-2fef6d785289">
+				<reportElement mode="Opaque" x="20" y="0" width="60" height="30" backcolor="#E6E6E6" uuid="9278ce2a-bbfc-4351-b340-2fef6d785289">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="17b0a593-b3ae-4962-88fe-0953480bb4b7"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
 					<pen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
 				<text><![CDATA[ID]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="80" y="0" width="330" height="30" uuid="98cdd8b1-1dc2-462d-9f8e-5f23fd96910d">
+				<reportElement mode="Opaque" x="80" y="0" width="330" height="30" backcolor="#E6E6E6" uuid="98cdd8b1-1dc2-462d-9f8e-5f23fd96910d">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="98a41615-04f3-4a5a-9140-502ef8e93c51"/>
 				</reportElement>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
@@ -83,11 +92,13 @@ ORDER BY categoria.descricao DESC]]>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
 				<text><![CDATA[Descrição]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="410" y="0" width="120" height="30" uuid="a431d73d-6092-46a7-b76a-2434ae71857f">
+				<reportElement mode="Opaque" x="410" y="0" width="120" height="30" backcolor="#E6E6E6" uuid="a431d73d-6092-46a7-b76a-2434ae71857f">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0e7bab8d-8cae-4837-a470-8f115b54786d"/>
 				</reportElement>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
@@ -96,7 +107,9 @@ ORDER BY categoria.descricao DESC]]>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
 				<text><![CDATA[Ativo]]></text>
 			</staticText>
 		</band>
@@ -150,7 +163,7 @@ ORDER BY categoria.descricao DESC]]>
 				<textFieldExpression><![CDATA[$P{nome}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="110" y="10" width="60" height="20" uuid="49bee0f4-13ca-41ee-8b4d-a78175c9122c"/>
+				<reportElement x="160" y="10" width="60" height="20" uuid="49bee0f4-13ca-41ee-8b4d-a78175c9122c"/>
 				<text><![CDATA[Gerado por:]]></text>
 			</staticText>
 			<textField pattern="HH:mm">

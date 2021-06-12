@@ -11,6 +11,10 @@
     <body>
         <%
             String nome = "";
+            String ativo = request.getParameter("ativo");
+            if ("todos".equals(ativo)) {
+                ativo = null;
+            }
             HttpSession sessao = ((HttpServletRequest) request).getSession();
             Pessoa pessoa = (Pessoa) sessao.getAttribute("usuarioLogado");
             if (pessoa != null) {
@@ -19,7 +23,7 @@
                 System.out.println("nome: "+ nome);
             }
             
-            byte[] bytes = new CategoriaDao().gerarRelatorio(nome);
+            byte[] bytes = new CategoriaDao().gerarRelatorio(nome, ativo);
 
             response.setContentType("application/pdf");
             response.setContentLength(bytes.length);

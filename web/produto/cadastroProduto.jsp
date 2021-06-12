@@ -8,6 +8,7 @@
 
 <html>
     <head>
+        <%@include file="/menu/menu.jsp" %>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="">
@@ -99,7 +100,7 @@
         </style>
 
         <main class="mainProd">
-            <%                Produto prod = null;
+            <%  Produto prod = null;
 
                 String id = request.getParameter("id");
 
@@ -115,12 +116,13 @@
                     prod.nome = "";
                     prod.descricao = "";
                     prod.estoque = 0;
+                    prod.file = "";
                     prod.id_categoria = 0;
                     prod.valor = 0.0;
                 }
             %>
 
-            <form method="post" class="prod" enctype="multipart/form-data" action="/WebMarket/uploadTest.jsp">            
+            <form method="post" class="prod" action="/WebMarket/srvProduto?param=salvarProduto">            
 
                 <h1 class="h3 mb-3 fw-normal">Cadastro de Produto</h1>       
 
@@ -131,7 +133,7 @@
                 </label>
 
                 <label for="inputDescricao" class="labell">Descrição do Produto*
-                    <textarea class="form-control inputt" name="descricao" placeholder="Descrição Detalhada do Produto*" type="text" required><%=prod.descricao%></textarea>
+                    <textarea class="form-control inputt" name="descricao" placeholder="Descrição detalhada do produto*" type="text" required><%=prod.descricao%></textarea>
                 </label>
 
                 <label for="inputQuantidade" class="labell">Quantidade*
@@ -142,7 +144,9 @@
                     <input type="text" name="valor" pattern="\d+(?:.\d+)?" class="form-control inputt" value="<%= prod.valor%>" >
                 </label>
 
-                <input class="inputt" type="file" name="file" size="50" />
+                <label for="inputLink" class="labell">Link
+                    <input type="text" name="file" class="form-control inputt" value="<%= prod.file%>" >
+                </label>
 
                 <label for="inputCategoria" class="labell" >Categoria do Produto*
                     <select name="comboCategoria" class="form-select form-select-lg inputt" aria-label=".form-select-sm example">
@@ -162,17 +166,62 @@
                     </select>
                 </label>
                 <label class="checkBox">Ativo:
-                    <input  <%= prod.id != 0 && prod.ativo.equals("ativo") ? "checked" : "!"%>
-                        type="checkbox" class="Cheeck" name="checkbox"></input></label>
+                    <input  <%= prod.id != 0 && prod.ativo.equals("Y") ? "checked" : "!"%>
+                        type="checkbox" class="Cheeck" name="ativo"></input></label>
 
                 <button class="btn btn-lg btn-dark cadastro" type="submit" value="Salvar" >Cadastrar</button>
-
+                <script>
+                    document.addEventListener('readystatechange', () => {
+                        if (document.readyState !== 'complete')
+                            return;
+                        const params = new URL(location.href).searchParams;
+                        if (params.get('erro') === 'DESCRICAO_INVALIDA') {
+                            swal({
+                                title: "Hey!",
+                                text: "Descrição inválida, tente novamente!",
+                                icon: "error",
+                                button: false,
+                                timer: 1500
+                            });
+                        } else if (params.get('erro') === 'NAO_EXCLUIU') {
+                            swal({
+                                title: "Vish!",
+                                text: "Erro ao excluir produto!",
+                                icon: "warning",
+                                button: false,
+                                timer: 1500
+                            });
+                        } else if (params.get('certo') === 'SALVA') {
+                            swal({
+                                title: "Salvo!",
+                                text: "O produto foi salvo com sucesso!",
+                                icon: "success",
+                                button: false,
+                                timer: 1500
+                            });
+                        } else if (params.get('certo') === 'ATUALIZADO') {
+                            swal({
+                                title: "Atualizado!",
+                                text: "O produto foi atualizado com sucesso!",
+                                icon: "success",
+                                button: false,
+                                timer: 1500
+                            });
+                        } else if (params.get('certo') === 'EXCLUIDO') {
+                            swal({
+                                title: "Excluido!",
+                                text: "O produto foi atualizado com sucesso!",
+                                icon: "success",
+                                button: false,
+                                timer: 1500
+                            });
+                        }
+                    });
+                </script>
             </form>
 
             <%@include file="listagemProduto.jsp" %>
-
         </main>
-
     </body>
-    <footer><p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p></footer>
+    <footer><p class="mt-5 mb-3 text-muted">&copy;XingoLingo 2021</p></footer>
 </html>

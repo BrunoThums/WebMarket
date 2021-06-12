@@ -1,0 +1,137 @@
+* {
+    box-sizing: border-box;
+}
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    font-family: Montserrat;
+    align-content: space-between;
+    -moz-column-count: 3;
+    -moz-column-gap: 20px;
+    -webkit-column-count: 3;
+    -webkit-column-gap: 20px;
+    column-count: 3;
+    column-gap: 20px;
+    columns: 3;
+    padding-left: 100px;
+}
+
+
+.outer {
+    position: relative;
+    background: #fff;
+    height: 300px;
+    width: 350px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    margin: 1em;
+}
+
+img {
+    position: absolute;
+    top: 30px;
+    right: 0px;
+    z-index: 0;
+    animation-delay: 0.5s;
+}
+
+.content {
+    animation-delay: 0.3s;
+    position: absolute;
+    left: 20px;
+    z-index: 3;
+}
+
+h5 {
+    font-size: 10px;
+    color: #111;
+    margin-bottom: 150px;
+    margin-top:  10px;
+    margin-left: 10px;
+
+
+}
+
+p {
+    width: 280px;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #aaa;
+    margin: 0px 0;
+}
+
+.bg {
+    display: inline-block;
+    color: #fff;
+    background: cornflowerblue;
+    padding: 5px 10px;
+    border-radius: 50px;
+    font-size: 0.7em;
+}
+.button {
+    width: fit-content;
+    height: fit-content;
+    margin-top: 10px;
+}
+
+.button a {
+    display: inline-block;
+    overflow: hidden;
+    position: relative;
+    font-size: 11px;
+    color: #111;
+    text-decoration: none;
+    padding: 10px 15px;
+    border: 1px solid #aaa;
+    font-weight: bold;
+}
+
+.button a:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -10px;
+    width: 0%;
+    background: #111;
+    height: 100%;
+    z-index: -1;
+    transition: width 0.3s ease-in-out;
+    transform: skew(-25deg);
+    transform-origin: right;
+}
+
+.button a:hover:after {
+    width: 150%;
+    left: -10px;
+    transform-origin: left;
+}
+
+.button a:hover {
+    color: #fff;
+    transition: all 0.5s ease;
+}
+
+.button a:nth-of-type(1) {
+    border-radius: 50px 0 0 50px;
+    border-right: none;
+}
+
+.button a:nth-of-type(2) {
+    border-radius: 0px 50px 50px 0;
+}
+
+.cart-icon {
+    padding-right: 8px;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+

@@ -46,7 +46,7 @@
             
             body {
                 <%--Plano de Fundo do Bonoro --%>
-                background-image: url(bonoro.jpg);
+                background-image: url(https://images.squarespace-cdn.com/content/5b6636e5b27e393c75bcde4b/1546873882009-4BX3AJYVW2T30RLJQZ6G/workingcat.jpg?content-type=image%2Fjpeg);
                 background-repeat: no-repeat;
                 background-attachment: fixed;
                 background-size: 100% 100%;

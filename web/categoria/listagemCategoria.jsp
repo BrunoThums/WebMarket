@@ -1,3 +1,4 @@
+<%@page import="apoio.Formatacao"%>
 <%@page import="dao.CategoriaDao"%>
 <%@page import="entidade.Categoria"%>
 <%@page import="java.util.ArrayList"%>
@@ -40,8 +41,8 @@
                     <td><a href='/WebMarket/Categoria?param=excluirCategoria&id=<%= c.id%>'><i class="far fa-trash-alt"></i></a></td>
                     <td><%= c.id%></td>                
                     <td><%= c.descricao%></td>
-                    <td><%= c.criado_em%></td>
-                    <td><%= c.atualizado_em%></td>
+                    <td><%= Formatacao.ajustaDataDMA(String.valueOf(c.criado_em)%></td>
+                    <td><%= Formatacao.ajustaDataDMA(String.valueOf(c.atualizado_em)%></td>
                     <td><%= c.ativo%></td>
                 </tr>
                 <%
