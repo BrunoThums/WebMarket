@@ -19,17 +19,15 @@
 
         <h1 class="h3 mb-3 fw-normal" >Listagem de Produtos</h1>
 
-        <%
-            ArrayList<Produto> listProd = new ProdutoDao().consultaAvancada("", "Y", "");
+            <%ArrayList<Produto> listProd = new ProdutoDao().consultaAvancada("", "Y", "");%>
 
 
-        %>
+        
 
         <div class="table-responsive" style="text-align: center; padding-top: 20px; width: 90%; margin: auto" >
             <table class="table table-bordered table-striped table-sm">
                 <th>Editar</th>
                 <th>Excluir</th>
-                <th>Id</th>
                 <th>Categoria</th>
                 <th>Nome</th>
                 <th>Valor</th>
@@ -45,7 +43,6 @@
                 <tr class="table-light">
                     <td><a href='/WebMarket/srvProduto?param=editarProduto&id=<%= c.id%>'><i class="far fa-edit center"></i></a></td>
                     <td><a href='/WebMarket/srvProduto?param=excluirProduto&id=<%= c.id%>'><i class="far fa-trash-alt"></i></a></td>
-                    <td><%= c.id%></td>   
                     <% Categoria cat = new CategoriaDao().consultarId(c.id_categoria); %>
                     <td><%= cat.descricao %></td>
                     <td><%= c.nome%></td>

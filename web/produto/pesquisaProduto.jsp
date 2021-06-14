@@ -42,7 +42,7 @@
 
                 <label><input type="radio" name="ordem" <%="ASC".equals(ordem) ? "checked" : ""%> value="ASC">Crescente</label>
                 <label><input type="radio" name="ordem" <%="DESC".equals(ordem) ? "checked" : ""%> value="DESC">Decrescente</label>
-
+                
             </form>
         </form>
 
@@ -54,7 +54,6 @@
             <table class="table table-bordered table-striped table-sm">
                 <th>Editar</th>
                 <th>Excluir</th>
-                <th>Id</th>
                 <th>Categoria</th>
                 <th>Nome</th>
                 <th>Valor</th>
@@ -70,7 +69,6 @@
                 <tr class="table-light">
                     <td><a href='/WebMarket/srvProduto?param=editarProduto&id=<%= prod.id%>'><i class="far fa-edit center"></i></a></td>
                     <td><a href='/WebMarket/srvProduto?param=excluirProduto&id=<%= prod.id%>'><i class="far fa-trash-alt"></i></a></td>
-                    <td><%= prod.id%></td>   
                     <% Categoria cat = new CategoriaDao().consultarId(prod.id_categoria);%>
                     <td><%= cat.descricao%></td>
                     <td><%= prod.nome%></td>

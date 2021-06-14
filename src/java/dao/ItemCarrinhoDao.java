@@ -19,10 +19,9 @@ public class ItemCarrinhoDao implements IDAO<ItemCarrinho> {
             String sql = "INSERT INTO itemCarrinho "
                     + "default,"
                     + "'" + item.quant + "',"
-                    + "'" + item.precoTotal + "',"
                     + "'" + item.valorUnit + "',"
-                    + "'now()'" + ","
-                    + "'" + item.id_produto + "'";
+                    + "'" + item.id_produto + ","
+                    + "'now()'" + "'";
 
             System.out.println("SQL: " + sql);
 
@@ -42,7 +41,6 @@ public class ItemCarrinhoDao implements IDAO<ItemCarrinho> {
 
             String sql = "UPDATE itemCarrinho SET "
                     + "quant=" + o.quant + ","
-                    + "precoTotal=" + o.precoTotal + ","
                     + "valorUnit=" + o.valorUnit + ","
                     + "id_produto=" + o.id_produto + " "
                     + "WHERE id= " + o.id;

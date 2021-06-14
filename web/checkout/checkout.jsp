@@ -1,3 +1,4 @@
+<%@page import="apoio.Formatacao"%>
 <%@page import="entidade.ItemCarrinho"%>
 <%@page import="java.util.ArrayList"%>
 <%@include file="/menu/menu.jsp" %>
@@ -8,62 +9,127 @@
     <head>
     </head>
     <body>
-        <%
-            ArrayList<ItemCarrinho> items = (ArrayList<ItemCarrinho>) request.getAttribute("itens");
-            /*  Carrinho cart = null;
-            try {
-                Integer id = Integer.parseInt(request.getParameter("id"));
-                if (id == null) {
-                    throw new RuntimeException();
-                }
-                cart = new CarrinhoDao().consultarId(id);
-                if (cart == null) {
-                    throw new RuntimeException();
-                }
-            } catch (Exception e) {
-                response.sendRedirect("/WebMarket/index.jsp");
-            }*/
-
+        <%  HttpSession sessaoo = ((HttpServletRequest) request).getSession();
+            ArrayList<ItemCarrinho> prodt = (ArrayList<ItemCarrinho>) sessaoo.getAttribute("cart");
+            double subTotal = 0.0;
         %>
     </body>
-<style>
-            body {
-                <%--Plano de Fundo do mimi --%>
-                background-image: url(https://www.flixxy.com/grocery-shopping-cats-image10.jpg);
-                background-repeat: no-repeat;
-                background-attachment: fixed;
-                background-size: 100% 100%;
-            }
-        </style>
-<div class="container mt-5 mb-5">
-    <div class="d-flex justify-content-center row">
-        <div class="col-md-8" style="background-color: #ecedee">
-            <div class="p-2">
-                <h4>Shopping cart</h4>
-            <div class="d-flex flex-row justify-content-between align-items-center p-2 bg-white mt-4 px-3 rounded">
-                <div class="mr-1"><img class="rounded" src="https://i.imgur.com/XiFJkhI.jpg" width="70"></div>
-                <div class="d-flex flex-column align-items-center product-details"><span class="font-weight-bold">Basic T-shirt</span>
-                    <div class="d-flex flex-row product-desc">
-                        <div class="size mr-1"><span class="text-grey">Descrição</span><span class="font-weight-bold"> xxx</span></div>
-                    </div>
+    <style>
+        body {
+            <%--Plano de Fundo do mimi --%>
+            background-image: url(https://www.flixxy.com/grocery-shopping-cats-image10.jpg);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: 100% 100%;
+        }
+        .descricao{
+            font-size: 12px;
+        }
+
+        table, td{
+            border: 1px solid transparent;
+
+        }
+
+        td{
+            vertical-align: middle;   
+            padding: 4px 0;
+        }
+
+        .produto{
+            background-color: #FFF;
+            border-radius: 8px;
+        }
+
+        table{
+            border-spacing: 0 16px;
+            border-collapse: separate;
+        }
+    </style>
+    <%
+        double valor = 0;
+        int quantidade = 0;
+    %>
+    <div class="container mt-5 mb-5">
+        <div class="d-flex justify-content-center row">
+            <div class="col-md-8" style="background-color: #ecedee">
+                <div class="p-2">
+                    <h4>Seu Carrinho</h4>
+                    <table>
+                        <tbody>
+
+                            <%  if (prodt.size() == 0) {
+                                    out.print("<div style='text-align: center; margin: 10px;'>"
+                                            + "<span style='font-size: 35px; font-weight: bold;'>"
+                                            + "Nenhum Produto Adicionado :("
+                                            + "</span>"
+                                            + "<div>");
+                                } else {
+                                    for (int i = 0; i < prodt.size(); i++) {
+                                        Produto c = new ProdutoDao().consultarId(prodt.get(i).id_produto);
+                                        valor += c.valor;
+                            %>
+                            <tr class="produto">
+                                <td class="imagem">
+                                    <img class="rounded" src="<%=c.file%>" width="70">
+                                </td>
+                                <td class="nome">
+                                    <span><%=c.nome%></span>
+                                </td>
+                                <td class="quantidade" >
+                                    <a class="fa fa-minus text-danger" href="/WebMarket/cart?param=qntRemove&id=<%= c.id%>"></a>
+                                </td>
+
+                                <td class="quantidade">
+                                    <h5 class="text-grey mt-1 mr-1 ml-1"><%= prodt.get(i).quant %></h5>
+                                </td>
+
+                                <td class="quantidade">
+                                    <a class="fa fa-plus text-success" href="/WebMarket/cart?param=qntInsert&id=<%= c.id%>"></a>
+                                </td>
+
+
+                                <td class="valor" style="padding-left: 20px; padding-right: 20px">
+                                    <h5 class="text-grey">R$<%=Formatacao.formatarDecimal(c.valor)%></h5>
+                                </td>
+                                <td class="apagar">
+                                    <a class="fa fa-trash mb-1 text-danger" href="/WebMarket/cart?param=excluirDoCarrinho&id=<%= c.id%>"></a>
+                                </td>
+                            </tr>
+
+
+
+                            <!--<div class="d-flex flex-row align-items-center p-2 bg-white mt-4 px-3 rounded">
+                                <div class="mr-1"><img class="rounded" src="<%=c.file%>" width="70"></div>
+                                <div class="d-flex flex-column justify-content-lg-start product-details"><span><%=c.nome%></span>
+                                </div>
+                                <div class="d-flex flex-row align-items-center qty"><i class="fa fa-minus text-danger"></i>
+                                    <h5 class="text-grey mt-1 mr-1 ml-1">1</h5><i class="fa fa-plus text-success"></i>
+                                </div>
+                                <div>
+                                    <h5 class="text-grey"><%=c.valor%></h5>
+                                </div>
+                                <div class="d-flex align-items-center"><a class="fa fa-trash mb-1 text-danger" href=""></a></div>
+                            </div>-->
+                            <%
+                                    }
+                                }
+                            %>
+
+                        </tbody>    
+                    </table>
+                    <% if (prodt.size() != 0) {%>
+                    <div class="d-flex flex-row align-items-center mt-3 p-2 bg-white rounded"><i type="text" class="form-control border-0 gift-card">Total: R$<%=Formatacao.formatarDecimal(valor)%> ou 12x de R$<%=Formatacao.formatarDecimal(valor / 12)%></i></div>
+                    <div class="d-flex flex-row align-items-center mt-3 p-2 bg-white rounded"><button class="btn btn-warning btn-block btn-lg ml-2 pay-button" type="button">Prosseguir para Pagamento</button></div>
+                    <%} else {%>
+                    <div class="d-flex flex-row align-items-center mt-3 p-2 bg-white rounded"><a class="btn btn-warning btn-block btn-lg ml-2 pay-button" type="button" href="/WebMarket/index.jsp">Experimente adicionar items :D</a></div>
+                    <%}%>
+
                 </div>
-                <div class="d-flex flex-row align-items-center qty"><i class="fa fa-minus text-danger"></i>
-                    <h5 class="text-grey mt-1 mr-1 ml-1">1</h5><i class="fa fa-plus text-success"></i>
-                </div>
-                <div>
-                    <h5 class="text-grey">$20.00</h5>
-                </div>
-                <div class="d-flex align-items-center"><i class="fa fa-trash mb-1 text-danger"></i></div>
             </div>
-                
-            
-            <div class="d-flex flex-row align-items-center mt-3 p-2 bg-white rounded"><input type="text" class="form-control border-0 gift-card" placeholder="discount code/gift card"><button class="btn btn-outline-warning btn-sm ml-2" type="button">Apply</button></div>
-            <div class="d-flex flex-row align-items-center mt-3 p-2 bg-white rounded"><button class="btn btn-warning btn-block btn-lg ml-2 pay-button" type="button">Proceed to Pay</button></div>
         </div>
-    </div>
-</div>
-<link href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css'>
-<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js'></script>
-<link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
-<script  src="/WebMarket/checkout/checkout.css"></script>
+        <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css'>
+        <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js'></script>
+        <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+        <script  src="/WebMarket/checkout/checkout.css"></script>

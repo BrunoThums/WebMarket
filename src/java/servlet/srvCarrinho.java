@@ -72,7 +72,7 @@ public class srvCarrinho extends HttpServlet {
 
         ArrayList<ItemCarrinho> produtos = (ArrayList<ItemCarrinho>) session.getAttribute("cart");
 
-        if (param.equals("excluirCarrinho")) {
+        if (param.equals("excluirDoCarrinho")) {
             String id = request.getParameter("id");
             int d = Integer.parseInt(id);
 
@@ -81,14 +81,20 @@ public class srvCarrinho extends HttpServlet {
             response.sendRedirect("/WebMarket/checkout/checkout.jsp");
         } else if (param.equals("qntInsert")) {
             System.out.println(param);
-            //VERIFICAR QUANT
+
             int id = Integer.parseInt(request.getParameter("id"));
-            produtos.stream().filter(p -> p.id_produto == id).findFirst().get().quant++;
+            ItemCarrinho item = produtos.stream().filter(p -> p.id_produto == id).findFirst().get();
+            if (pd.consultarId(id).estoque > item.quant) {
+                item.quant++;
+            }
             response.sendRedirect("/WebMarket/checkout/checkout.jsp");
 
         } else if (param.equals("qntRemove")) {
             int id = Integer.parseInt(request.getParameter("id"));
-            produtos.stream().filter(p -> p.id_produto == id).findFirst().get().quant--;
+            ItemCarrinho item = produtos.stream().filter(p -> p.id_produto == id).findFirst().get();
+            if (item.quant > 1) {
+                item.quant--;
+            }
             response.sendRedirect("/WebMarket/checkout/checkout.jsp");
         }
     }
@@ -108,7 +114,7 @@ public class srvCarrinho extends HttpServlet {
         String param = request.getParameter("param");
 
         ArrayList<ItemCarrinho> produtos = (ArrayList<ItemCarrinho>) session.getAttribute("cart");
-        Pessoa f = (Pessoa) session.getAttribute("usuarioLogado");
+        Pessoa pessoa = (Pessoa) session.getAttribute("usuarioLogado");
         if (param.equals("insertProd")) {
 
             int id = Integer.parseInt(request.getParameter("id"));
@@ -124,12 +130,10 @@ public class srvCarrinho extends HttpServlet {
                 item.id_produto = id;
 
                 produtos.add(item);
-            } else {
-                // 2 vezes msm produto apenas aumentar quant
+            } else if (pd.consultarId(item.id_produto).estoque < item.quant) {
                 item.quant++;
             }
-
-            response.sendRedirect("/WebMarket/index.jsp");
+            response.sendRedirect("index.jsp?certo=ADICIONADO");
 
         } else if (param.equals("compra")) {
             System.out.println(param);
@@ -137,7 +141,7 @@ public class srvCarrinho extends HttpServlet {
             CarrinhoDao carDao = new CarrinhoDao();
             CompraDao cDao = new CompraDao();
             PessoaDao pDao = new PessoaDao();
-            f = pDao.consultarEmail(f.email);
+            pessoa = pDao.consultarEmail(pessoa.email);
             if (produtos.size() <= 0) {
                 return;
             }
@@ -164,7 +168,7 @@ public class srvCarrinho extends HttpServlet {
             c.id = 0;
             c.parcelas = parcelas;
             c.valor = valorTotal / parcelas;
-            c.id_pessoa = f.id;
+            c.id_pessoa = pessoa.id;
             // Salva a compra e vê o novo id da compra
             // Salvar os itens e pegar os novos ids e dps salvar o carrinho
 

@@ -23,7 +23,6 @@
             <table class="table table-striped table-sm">
                 <th>Editar</th>
                 <th>Excluir</th>
-                <th>Id</th>
                 <th>Descrição</th>
                 <th>Criado Em</th>
                 <th>Atualizado Em</th>
@@ -39,10 +38,9 @@
                 <tr>
                     <td><a href='/WebMarket/Categoria?param=editarCategoria&id=<%= c.id%>'><i class="far fa-edit center"></i></a></td>
                     <td><a href='/WebMarket/Categoria?param=excluirCategoria&id=<%= c.id%>'><i class="far fa-trash-alt"></i></a></td>
-                    <td><%= c.id%></td>                
                     <td><%= c.descricao%></td>
-                    <td><%= Formatacao.ajustaDataDMA(String.valueOf(c.criado_em)%></td>
-                    <td><%= Formatacao.ajustaDataDMA(String.valueOf(c.atualizado_em)%></td>
+                    <td><%= Formatacao.ajustaDataDMA(String.valueOf(c.criado_em)) %></td>
+                    <td><%= Formatacao.ajustaDataDMA(String.valueOf(c.atualizado_em)) %></td>
                     <td><%= c.ativo%></td>
                 </tr>
                 <%

@@ -14,6 +14,7 @@
         <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
         <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.4/css/tether.min.css'>
         <link rel="stylesheet" href="/WebMarket/menu/menu.css">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.3.4/dist/sweetalert2.all.min.js"></script>
         <title>XingoLingo</title>
 
         <!--musicão padrão de shopping-->
@@ -78,13 +79,31 @@
                         </ul>
                     </li>
                     <li class="dropdown">
+                        <a href="" class="dropdown-toggle #listagens"  data-toggle="dropdown"> Listagens<span class="caret"></span></a>
+                        <ul class="dropdown-menu animated fadeInLeft" role="menu">
+                            <div class="dropdown-header"></div>
+
+                            <li><a href="#" class="listaCategoria #listCateg">Categoria</a></li>
+                            <li><a href="#" class="listaProduto #listProd">Produto</a></li>
+                            <li><a href="#" class="listaUsuario #listUsuario">Usuário</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
                         <a href="" class="dropdown-toggle #relatorios"  data-toggle="dropdown"> Relatórios<span class="caret"></span></a>
                         <ul class="dropdown-menu animated fadeInLeft" role="menu">
                             <div class="dropdown-header"></div>
 
-                            <li><a href="#" class="listaCategoria #relatorio">Categoria</a></li>
-                            <li><a href="#" class="listaProduto #relatorio">Produto</a></li>
-                            <li><a href="#" class="listaUsuario #relatorio">Usuário</a></li>
+                            <li><a href="#" class="relatCateg #relatorio">Categoria</a></li>
+                            <li><a href="#" class="relatProd #relatorio">Produto</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="" class="dropdown-toggle #grafico"  data-toggle="dropdown"> Gráficos<span class="caret"></span></a>
+                        <ul class="dropdown-menu animated fadeInLeft" role="menu">
+                            <div class="dropdown-header"></div>
+
+                            <li><a href="/WebMarket/graphic/graficoEstoqueBar.jsp" class="#graficoBar">Barra</a></li>
+                            <li><a href="/WebMarket/graphic/graficoEstoquePizza.jsp" class="#graficoPizza">Pizza</a></li>
                         </ul>
                     </li>
                     <li><a href="/WebMarket/checkout/checkout.jsp" class="#carrinho">Carrinho</a></li>
@@ -102,7 +121,6 @@
                     <span class="hamb-bottom"></span>
                 </button>
             </div>
-
             <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
             <script>
                 document.querySelector(".listaCategoria").addEventListener('click', () => {
@@ -144,22 +162,21 @@
                     });
                 });
                 
-                
-                document.querySelector(".relCompra").addEventListener('click', async () => {
+                document.querySelector(".relatCateg").addEventListener('click', async () => {
                     const {value} = await Swal.fire({
-                        title: "Por favor insira uma data válida!",
-                        html: '<input class="sw-dataInicial" type="date">' +
-                                '<input class="sw-dataFinal" type="date">',
+                        title: "Insira um intervalo de datas:",
+                        html: '<input class="sw-dataIni" type="date">' +
+                                '<input class="sw-dataFim" type="date">',
                         preConfirm: () => {
                             return [
-                                document.querySelector('.sw-dataInicial').value,
-                                document.querySelector('.sw-dataFinal').value
+                                document.querySelector('.sw-dataIni').value,
+                                document.querySelector('.sw-dataFim').value
                             ];
                         }
                     });
                     
                     const [dataInicial, dataFinal] = value;
-                    location.href = "/WebMarket/relatorios/relCompra.jsp?"
+                    location.href = "/WebMarket/relatorios/relatCateg.jsp?"
                             + new URLSearchParams({
                                 dataInicial,
                                 dataFinal
@@ -167,24 +184,23 @@
                 });
                 
                 
-                document.querySelector(".relProd").addEventListener('click', async () => {
+                document.querySelector(".relatProd").addEventListener('click', async () => {
                     const {value} = await Swal.fire({
-                        title: "Filtrar Valores",
-                        html: '<div><input class="sw-valorIni" type="text" pattern="^([.0-9])*\d$" placeholder="Preço Inicial" >' +
-                                '<input class="sw-valorFinal" type="text" pattern="^([.0-9])*\d$" placeholder="Preço Final" >' +
-                                ' </div>',
+                        title: "Insira um intervalo de datas:",
+                        html: '<input class="sw-dataIni" type="date">' +
+                                '<input class="sw-dataFim" type="date">',
                         preConfirm: () => {
                             return [
-                                document.querySelector('.sw-valorIni').value,
-                                document.querySelector('.sw-valorFinal').value
+                                document.querySelector('.sw-dataIni').value,
+                                document.querySelector('.sw-dataFim').value
                             ];
                         }
                     });
-                    const [valorIni, valorFinal] = value;
-                    location.href = "/WebMarket/relatorios/relValorProd.jsp?"
+                    const [dataInicial, dataFinal] = value;
+                    location.href = "/WebMarket/relatorios/relatProduto.jsp?"
                             + new URLSearchParams({
-                                valorIni,
-                                valorFinal
+                                dataInicial,
+                                dataFinal
                             }).toString();
                 });
             </script>

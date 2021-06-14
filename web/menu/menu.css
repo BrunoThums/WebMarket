@@ -202,7 +202,7 @@ a[class*="#deslogar"]::before {
 }
 a[class*="#usuarios"]::before {
     content: "\f0c0" !important;
-    color: #084298;
+    color: #ece1be;
 }
 a[class*="#pesquisar"]::before {
     content: "\f002" !important;
@@ -224,8 +224,50 @@ a[class*="#conta"]::before {
     content: "\f05a" !important;
     color: #084298;
 }
-
-
+a[class*="listagens"]::before {
+    content: "\f022" !important;
+    color: #FFF;
+}
+a[class*="listCateg"]::before {
+    content: "\f022" !important;
+    color: #f1ad7d;
+}
+a[class*="listProd"]::before {
+    content: "\f022" !important;
+    color: #084298;
+}
+a[class*="listUsuario"]::before {
+    content: "\f022" !important;
+    color: #ece1be;
+}
+a[class*="listUsuario"]::before {
+    content: "\f022" !important;
+    color: #ece1be;
+}
+a[class*="relatorios"]::before {
+    content: "\f0ca" !important;
+    color: #FFF;
+}
+a[class*="relatCateg"]::before {
+    content: "\f0ca" !important;
+    color: #f1ad7d;
+}
+a[class*="relatProd"]::before {
+    content: "\f0ca" !important;
+    color: #084298;
+}
+a[class*="grafico"]::before {
+    content: "\f080" !important;
+    color: #FFF;
+}
+a[class*="graficoBar"]::before {
+    content: "\f080" !important;
+    color: #66ffff;
+}
+a[class*="graficoPizza"]::before {
+    content: "\f200" !important;
+    color: #86b7fe;
+}
 /*-------------------------------*/
 /*       Hamburger-Cross         */
 /*-------------------------------*/

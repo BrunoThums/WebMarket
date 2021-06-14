@@ -6,14 +6,17 @@
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="405"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="581"/>
 	<parameter name="nome" class="java.lang.String"/>
-	<parameter name="ativo" class="java.lang.String"/>
+	<parameter name="dataIni" class="java.sql.Date"/>
+	<parameter name="dataFim" class="java.sql.Date"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT *
 FROM categoria
 WHERE 
-	  ($P{ativo} IS NULL  
-	 OR categoria.ativo = $P{ativo}) 
-ORDER BY categoria.descricao ASC]]>
+	 categoria.ativo = 'Y' 
+	 AND categoria.created_at BETWEEN $P{dataIni} AND $P{dataFim}
+ORDER BY categoria.descricao ASC
+
+]]>
 	</queryString>
 	<field name="id" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="id"/>
@@ -82,7 +85,7 @@ ORDER BY categoria.descricao ASC]]>
 				<text><![CDATA[ID]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="80" y="0" width="330" height="30" backcolor="#E6E6E6" uuid="98cdd8b1-1dc2-462d-9f8e-5f23fd96910d">
+				<reportElement mode="Opaque" x="80" y="0" width="280" height="30" backcolor="#E6E6E6" uuid="98cdd8b1-1dc2-462d-9f8e-5f23fd96910d">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="98a41615-04f3-4a5a-9140-502ef8e93c51"/>
 				</reportElement>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
@@ -97,7 +100,7 @@ ORDER BY categoria.descricao ASC]]>
 				<text><![CDATA[Descrição]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="410" y="0" width="120" height="30" backcolor="#E6E6E6" uuid="a431d73d-6092-46a7-b76a-2434ae71857f">
+				<reportElement mode="Opaque" x="480" y="0" width="70" height="30" backcolor="#E6E6E6" uuid="a431d73d-6092-46a7-b76a-2434ae71857f">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0e7bab8d-8cae-4837-a470-8f115b54786d"/>
 				</reportElement>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
@@ -111,10 +114,25 @@ ORDER BY categoria.descricao ASC]]>
 				</textElement>
 				<text><![CDATA[Ativo]]></text>
 			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="360" y="0" width="120" height="30" backcolor="#E6E6E6" uuid="0877282f-318b-4ba1-aab6-f0f26f6c61cc">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="146a46f3-2526-42c3-b684-4f153e00a93f"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Criado em:]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="31" splitType="Stretch">
+		<band height="30" splitType="Stretch">
 			<textField>
 				<reportElement x="20" y="0" width="60" height="30" uuid="2d842012-7747-4d92-b0d3-05d64ed4861c">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="17b0a593-b3ae-4962-88fe-0953480bb4b7"/>
@@ -127,7 +145,7 @@ ORDER BY categoria.descricao ASC]]>
 				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="80" y="0" width="330" height="30" uuid="8486feef-06ae-4202-a90b-005de4d92cd4">
+				<reportElement x="80" y="0" width="280" height="30" uuid="8486feef-06ae-4202-a90b-005de4d92cd4">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="98a41615-04f3-4a5a-9140-502ef8e93c51"/>
 				</reportElement>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
@@ -140,7 +158,7 @@ ORDER BY categoria.descricao ASC]]>
 				<textFieldExpression><![CDATA[$F{descricao}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="410" y="0" width="120" height="30" uuid="3220c6f4-1465-4091-b992-cd3da085b799">
+				<reportElement x="480" y="0" width="70" height="30" uuid="3220c6f4-1465-4091-b992-cd3da085b799">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0e7bab8d-8cae-4837-a470-8f115b54786d"/>
 				</reportElement>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
@@ -151,6 +169,19 @@ ORDER BY categoria.descricao ASC]]>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{ativo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="360" y="0" width="120" height="30" uuid="a0812e33-a787-4679-96d4-944abafea734">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="146a46f3-2526-42c3-b684-4f153e00a93f"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy").format($F{created_at})]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

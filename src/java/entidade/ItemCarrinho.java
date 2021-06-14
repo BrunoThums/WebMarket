@@ -6,7 +6,6 @@ public class ItemCarrinho {
 
     public Integer id;
     public int quant;
-    public double precoTotal;
     public double valorUnit;
     public String created_at; 
     public Integer id_produto;

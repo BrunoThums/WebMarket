@@ -3,7 +3,10 @@ package dao;
 import apoio.ConexaoBD;
 import apoio.IDAO;
 import entidade.Categoria;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -148,6 +151,25 @@ public class CategoriaDao implements IDAO<Categoria> {
         }
         return null;
     }
+    
+    public ArrayList<Categoria> consultaAvancada(String ativo) {
+        
+        String sql = "SELECT * FROM categoria WHERE ativo = '"+ativo+"' ORDER BY descricao";
+        try {
+            ResultSet result = ConexaoBD.getInstance().getConnection().createStatement().executeQuery(sql);
+            ArrayList<Categoria> categoria = new ArrayList<>();
+            while (result.next()) {
+                categoria.add(Categoria.from(result));
+            }
+            if (categoria.isEmpty()) {
+                return null;
+            }
+            return categoria;
+        } catch (Exception e) {
+            System.out.println("Erro ao consultar categorias: " + e);
+        }
+        return null;
+    }
 
     @Override
     public Categoria consultarId(int id) {
@@ -225,6 +247,26 @@ public class CategoriaDao implements IDAO<Categoria> {
             return impressao;
         } catch (JRException e) {
             JOptionPane.showMessageDialog(null, "Erro ao gerar relatório: " + e);
+        }
+        return null;
+    }
+    
+    public byte[] gerarRelatorioData(String nome, String dataIni,String dataFim) {
+        try {
+            Connection conn = ConexaoBD.getInstance().getConnection();
+
+            JasperReport relatorio = JasperCompileManager.compileReport(getClass().getResourceAsStream("/relatorios/relatorio_categoria.jrxml"));
+
+            Map parameters = new HashMap();
+            parameters.put("nome", nome);
+            parameters.put("dataIni", Date.valueOf(dataIni));
+            parameters.put("dataFim", Date.valueOf(dataFim));
+
+            byte[] bytes = JasperRunManager.runReportToPdf(relatorio, parameters, conn);
+
+            return bytes;
+        } catch (JRException e) {
+            System.out.println("erro ao gerar relatorio: " + e);
         }
         return null;
     }

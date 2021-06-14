@@ -90,6 +90,20 @@ public class svrPesquisa extends HttpServlet {
 
             encaminharPagina("produto/pesquisaProduto.jsp", request, response);
         }
+        if (param.equals("pesqProd")) {
+            String categoria = request.getParameter("categoria");
+            String criterio = request.getParameter("produtoPesquisa");
+            if ("tudo".equals(categoria) && criterio == null) {
+                ArrayList<Produto> prod = new ProdutoDao().consultarTodos();
+                request.setAttribute("produtoPesquisa", prod);
+                encaminharPagina("index.jsp", request, response);
+            }
+            ArrayList<Produto> produtos = new ProdutoDao().consultar(criterio);
+
+            request.setAttribute("produtoPesquisa", produtos);
+
+            encaminharPagina("index.jsp", request, response);
+        }
     }
 
     /**

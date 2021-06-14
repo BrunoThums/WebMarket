@@ -3,7 +3,10 @@ package dao;
 import apoio.ConexaoBD;
 import apoio.IDAO;
 import entidade.Produto;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -123,10 +126,63 @@ public class ProdutoDao implements IDAO<Produto> {
         return consultarProdAndCategAndPreco(criterio, null, null);
     }
 
+    public ArrayList<Produto> consultar(String criterio, String categoria) {
+        return consultarProdAndCategAndPreco(criterio, categoria, null);
+    }
+
     public ArrayList<Produto> consultaAvancada(String pesquisa, String ativo, String ordem) {
         String sql = "SELECT * "
                 + "FROM produto "
                 + "WHERE nome ILIKE '%" + pesquisa + "%' AND ativo = '" + ativo + "' ORDER BY nome " + ordem;
+
+        ArrayList<Produto> produto = new ArrayList<>();
+
+        try {
+
+            result = ConexaoBD.getInstance().getConnection().createStatement().executeQuery(sql);
+            while (result.next()) {
+                produto.add(Produto.from(result));
+            }
+            return produto;
+        } catch (Exception e) {
+            System.out.println("Erro na consulta avançada: " + e);
+        }
+        return produto;
+    }
+
+    public ArrayList<Produto> consultaCriteriosa(String pesquisa, String categoria, String ordem) {
+        if (pesquisa == null) {
+            pesquisa = "";
+        }
+        String sql
+                = "SELECT * "
+                + "FROM produto "
+                + "WHERE nome ILIKE '%" + pesquisa + "%' ";
+        if (!"tudo".equals(categoria) && categoria != null) {
+            sql += "AND id_categoria = " + categoria + " ";
+        }
+        sql += "ORDER BY nome " + ordem;
+
+        ArrayList<Produto> produto = new ArrayList<>();
+
+        try {
+
+            result = ConexaoBD.getInstance().getConnection().createStatement().executeQuery(sql);
+            while (result.next()) {
+                produto.add(Produto.from(result));
+            }
+            return produto;
+        } catch (Exception e) {
+            System.out.println("Erro na consulta avançada: " + e);
+        }
+        return produto;
+    }
+    
+    public ArrayList<Produto> consultaProdPorCateg(int categoria) {
+        String sql
+                = "SELECT * "
+                + "FROM produto "
+                + "WHERE id_categoria = " + categoria + " ";
 
         ArrayList<Produto> produto = new ArrayList<>();
 
@@ -209,7 +265,7 @@ public class ProdutoDao implements IDAO<Produto> {
         }
         return null;
     }
-
+    
     public byte[] gerarRelatorioValor(Double valorIni, Double valorFinal) {
         try {
             Connection conn = ConexaoBD.getInstance().getConnection();
@@ -219,6 +275,26 @@ public class ProdutoDao implements IDAO<Produto> {
             Map parameters = new HashMap();
             parameters.put("valorIni", valorIni);
             parameters.put("valorFinal", valorFinal);
+
+            byte[] bytes = JasperRunManager.runReportToPdf(relatorio, parameters, conn);
+
+            return bytes;
+        } catch (Exception e) {
+            System.out.println("erro ao gerar relatorio: " + e);
+        }
+        return null;
+    }
+
+    public byte[] gerarRelatorioData(String nome, String dataIni, String dataFim) {
+        try {
+            Connection conn = ConexaoBD.getInstance().getConnection();
+
+            JasperReport relatorio = JasperCompileManager.compileReport(getClass().getResourceAsStream("/relatorios/relatorio_produto.jrxml"));
+
+            Map parameters = new HashMap();
+            parameters.put("nome", nome);
+            parameters.put("dataIni", Date.valueOf(dataIni));
+            parameters.put("dataFim", Date.valueOf(dataFim));
 
             byte[] bytes = JasperRunManager.runReportToPdf(relatorio, parameters, conn);
 
