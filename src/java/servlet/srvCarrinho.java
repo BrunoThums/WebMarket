@@ -78,7 +78,7 @@ public class srvCarrinho extends HttpServlet {
 
             removeItem(produtos, p -> p.id_produto == d);
 
-            response.sendRedirect("/WebMarket/checkout/checkout.jsp");
+            response.sendRedirect("/WebMarket/checkout/cart.jsp");
         } else if (param.equals("qntInsert")) {
             System.out.println(param);
 
@@ -87,7 +87,7 @@ public class srvCarrinho extends HttpServlet {
             if (pd.consultarId(id).estoque > item.quant) {
                 item.quant++;
             }
-            response.sendRedirect("/WebMarket/checkout/checkout.jsp");
+            response.sendRedirect("/WebMarket/checkout/cart.jsp");
 
         } else if (param.equals("qntRemove")) {
             int id = Integer.parseInt(request.getParameter("id"));
@@ -95,7 +95,7 @@ public class srvCarrinho extends HttpServlet {
             if (item.quant > 1) {
                 item.quant--;
             }
-            response.sendRedirect("/WebMarket/checkout/checkout.jsp");
+            response.sendRedirect("/WebMarket/checkout/cart.jsp");
         }
     }
 
@@ -114,6 +114,7 @@ public class srvCarrinho extends HttpServlet {
         String param = request.getParameter("param");
 
         ArrayList<ItemCarrinho> produtos = (ArrayList<ItemCarrinho>) session.getAttribute("cart");
+        
         Pessoa pessoa = (Pessoa) session.getAttribute("usuarioLogado");
         if (param.equals("insertProd")) {
 
@@ -136,18 +137,19 @@ public class srvCarrinho extends HttpServlet {
             response.sendRedirect("index.jsp?certo=ADICIONADO");
 
         } else if (param.equals("compra")) {
-            System.out.println(param);
-            ItemCarrinhoDao icDao = new ItemCarrinhoDao();
-            CarrinhoDao carDao = new CarrinhoDao();
-            CompraDao cDao = new CompraDao();
-            PessoaDao pDao = new PessoaDao();
-            pessoa = pDao.consultarEmail(pessoa.email);
+            ItemCarrinhoDao itemCarrinhoDao = new ItemCarrinhoDao();
+            CarrinhoDao carrinhoDao = new CarrinhoDao();
+            CompraDao compraDao = new CompraDao();
+            PessoaDao pessoaDao = new PessoaDao();
+            pessoa = pessoaDao.consultarEmail(pessoa.email);
+            
             if (produtos.size() <= 0) {
                 return;
             }
 
             double valorTotal = 0.0;
             int parcelas = Integer.parseInt(request.getParameter("parcelas"));
+            
             for (ItemCarrinho item : produtos) {
 
                 Produto p = pd.consultarId(item.id_produto);
@@ -160,30 +162,31 @@ public class srvCarrinho extends HttpServlet {
                 }
                 item.valorUnit = p.valor;
                 valorTotal += item.valorUnit * item.quant;
-
             }
 
             Compra c = new Compra();
 
             c.id = 0;
             c.parcelas = parcelas;
-            c.valor = valorTotal / parcelas;
+            c.valorTotal = valorTotal / parcelas;
             c.id_pessoa = pessoa.id;
             // Salva a compra e vê o novo id da compra
             // Salvar os itens e pegar os novos ids e dps salvar o carrinho
 
-            cDao.salvar(c);
+            compraDao.salvar(c);
 
-            Carrinho car = new Carrinho();
-            car.id_compra = c.id;
+            /*Carrinho carrinho = new Carrinho();
+            carrinho.id_compra = c.id;
             for (ItemCarrinho item : produtos) {
-                icDao.salvar(item);
+                itemCarrinhoDao.salvar(item);
 
-                car.id_item = item.id;
-                carDao.salvar(car);
-            }
+                carrinho.id_item = item.id;
+                carrinhoDao.salvar(carrinho);
+            }*/
+            produtos.clear();
             session.setAttribute("cart", new ArrayList<ItemCarrinho>());
-            response.sendRedirect("/WebMarket/checkout/checkout.jsp");
+            response.sendRedirect("/WebMarket/checkout/checkout.jsp?certo=COMPRADO");
+            //response.sendRedirect("/WebMarket/checkout/cart.jsp?certo=COMPRADO");
 
         }
     }

@@ -1,135 +1,326 @@
 <%@page import="apoio.Formatacao"%>
-<%@page import="entidade.ItemCarrinho"%>
-<%@page import="java.util.ArrayList"%>
-<%@include file="/menu/menu.jsp" %>
 <%@page import="dao.ProdutoDao"%>
 <%@page import="entidade.Produto"%>
+<%@include file="/menu/menu.jsp" %>
+<%@page import="entidade.ItemCarrinho"%>
+<%@page import="java.util.ArrayList"%>
 <!DOCTYPE html>
 <html>
     <head>
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <link href="/WebMarket/checkout/checkout.css" rel="stylesheet">
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     </head>
+    <!------ Include the above in your HEAD tag ---------->
     <body>
+        <style>
+            body {
+                <%--Plano de Fundo do mimi --%>
+                background-image: url("https://www.thesprucepets.com/thmb/bO7uac9LGqWIkBQ79ekwB_d5JKc=/4368x2912/filters:fill(auto,1)/cat-search-91112434-57d96a3a3df78c58339733a8.jpg");
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                background-size: 100% 100%;
+            }
+        </style>
+        
+        <script>
+            document.addEventListener('readystatechange', () => {
+                if (document.readyState !== "complete")
+                    return;
+
+                const params = new URL(location.href).searchParams;
+                if (params.get('erro') === 'ERRO') {
+                    Swal.fire({
+                        title: "Houve um Problema!",
+                        text: "erro ao comprar o(s) produto(s)",
+                        icon: "error",
+                        button: "OK"
+                    });
+                } else if (params.get('erro') === 'NENHUM_PRODUTO') {
+                    Swal.fire({
+                        title: "Houve um Problema!",
+                        text: "Nenhum Produto foi Adicionado ao Carrinho",
+                        icon: "error",
+                        button: "OK"
+                    }).then(() => {
+                        location.href = "/WebMarket/index.jsp";
+                    });
+                    } else if (params.get('certo') === 'COMPRADO') {
+                    Swal.fire({
+                        title: "Feitoria!",
+                        text: "Compra confirmada!",
+                        icon: "sucess",
+                        button: "YEY!"
+                    }).then(() => {
+                        location.href = "/WebMarket/index.jsp";
+                    });
+                }
+            });
+        </script>
+        
+        
         <%  HttpSession sessaoo = ((HttpServletRequest) request).getSession();
             ArrayList<ItemCarrinho> prodt = (ArrayList<ItemCarrinho>) sessaoo.getAttribute("cart");
             double subTotal = 0.0;
+            double valor = 0;
+            int quantidade = 0;
         %>
-    </body>
-    <style>
-        body {
-            <%--Plano de Fundo do mimi --%>
-            background-image: url(https://www.flixxy.com/grocery-shopping-cats-image10.jpg);
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-size: 100% 100%;
-        }
-        .descricao{
-            font-size: 12px;
-        }
-
-        table, td{
-            border: 1px solid transparent;
-
-        }
-
-        td{
-            vertical-align: middle;   
-            padding: 4px 0;
-        }
-
-        .produto{
-            background-color: #FFF;
-            border-radius: 8px;
-        }
-
-        table{
-            border-spacing: 0 16px;
-            border-collapse: separate;
-        }
-    </style>
-    <%
-        double valor = 0;
-        int quantidade = 0;
-    %>
-    <div class="container mt-5 mb-5">
-        <div class="d-flex justify-content-center row">
-            <div class="col-md-8" style="background-color: #ecedee">
-                <div class="p-2">
-                    <h4>Seu Carrinho</h4>
-                    <table>
-                        <tbody>
-
-                            <%  if (prodt.size() == 0) {
-                                    out.print("<div style='text-align: center; margin: 10px;'>"
-                                            + "<span style='font-size: 35px; font-weight: bold;'>"
-                                            + "Nenhum Produto Adicionado :("
-                                            + "</span>"
-                                            + "<div>");
-                                } else {
-                                    for (int i = 0; i < prodt.size(); i++) {
-                                        Produto c = new ProdutoDao().consultarId(prodt.get(i).id_produto);
-                                        valor += c.valor;
-                            %>
-                            <tr class="produto">
-                                <td class="imagem">
-                                    <img class="rounded" src="<%=c.file%>" width="70">
-                                </td>
-                                <td class="nome">
-                                    <span><%=c.nome%></span>
-                                </td>
-                                <td class="quantidade" >
-                                    <a class="fa fa-minus text-danger" href="/WebMarket/cart?param=qntRemove&id=<%= c.id%>"></a>
-                                </td>
-
-                                <td class="quantidade">
-                                    <h5 class="text-grey mt-1 mr-1 ml-1"><%= prodt.get(i).quant %></h5>
-                                </td>
-
-                                <td class="quantidade">
-                                    <a class="fa fa-plus text-success" href="/WebMarket/cart?param=qntInsert&id=<%= c.id%>"></a>
-                                </td>
-
-
-                                <td class="valor" style="padding-left: 20px; padding-right: 20px">
-                                    <h5 class="text-grey">R$<%=Formatacao.formatarDecimal(c.valor)%></h5>
-                                </td>
-                                <td class="apagar">
-                                    <a class="fa fa-trash mb-1 text-danger" href="/WebMarket/cart?param=excluirDoCarrinho&id=<%= c.id%>"></a>
-                                </td>
-                            </tr>
-
-
-
-                            <!--<div class="d-flex flex-row align-items-center p-2 bg-white mt-4 px-3 rounded">
-                                <div class="mr-1"><img class="rounded" src="<%=c.file%>" width="70"></div>
-                                <div class="d-flex flex-column justify-content-lg-start product-details"><span><%=c.nome%></span>
-                                </div>
-                                <div class="d-flex flex-row align-items-center qty"><i class="fa fa-minus text-danger"></i>
-                                    <h5 class="text-grey mt-1 mr-1 ml-1">1</h5><i class="fa fa-plus text-success"></i>
-                                </div>
-                                <div>
-                                    <h5 class="text-grey"><%=c.valor%></h5>
-                                </div>
-                                <div class="d-flex align-items-center"><a class="fa fa-trash mb-1 text-danger" href=""></a></div>
-                            </div>-->
-                            <%
-                                    }
-                                }
-                            %>
-
-                        </tbody>    
-                    </table>
-                    <% if (prodt.size() != 0) {%>
-                    <div class="d-flex flex-row align-items-center mt-3 p-2 bg-white rounded"><i type="text" class="form-control border-0 gift-card">Total: R$<%=Formatacao.formatarDecimal(valor)%> ou 12x de R$<%=Formatacao.formatarDecimal(valor / 12)%></i></div>
-                    <div class="d-flex flex-row align-items-center mt-3 p-2 bg-white rounded"><button class="btn btn-warning btn-block btn-lg ml-2 pay-button" type="button">Prosseguir para Pagamento</button></div>
-                    <%} else {%>
-                    <div class="d-flex flex-row align-items-center mt-3 p-2 bg-white rounded"><a class="btn btn-warning btn-block btn-lg ml-2 pay-button" type="button" href="/WebMarket/index.jsp">Experimente adicionar items :D</a></div>
-                    <%}%>
-
+        <div class="container wrapper">
+            <div class="row cart-head">
+                <div class="container">
+                    <div class="row">
+                        <p></p>
+                    </div>
+                    <div class="row">
+                        <div style="display: table; margin: auto;">
+                            <span class="step step_complete"> <a href="/WebMarket/index.jsp" class="check-bc">Início</a> <span class="step_line "> </span> <span class="step_line step_complete"> </span> </span>
+                            <span class="step step_complete"> <a href="/WebMarket/checkout/cart.jsp" class="check-bc">Carrinho</a> <span class="step_line step_complete"> </span> <span class="step_line backline"> </span> </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <p></p>
+                    </div>
                 </div>
+            </div>    
+            <div class="row cart-body">
+                <form class="form-horizontal" method="post" action="/WebMarket/cart?param=compra">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 col-md-push-6 col-sm-push-6">
+                        <!--REVIEW ORDER-->
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                Resumo do Pedido <div class="pull-right"><small><a class="afix-1" href="/WebMarket/checkout/cart.jsp">Editar Carrinho</a></small></div>
+                            </div>
+                            <div class="panel-body">
+                                <%  if (prodt.size() == 0) {
+                                        out.print("<div style='text-align: center; margin: 10px;'>"
+                                                + "<span style='font-size: 35px; font-weight: bold;'>"
+                                                + "Nenhum Produto Adicionado :("
+                                                + "</span>"
+                                                + "<div>");
+                                    } else {
+                                        for (int i = 0; i < prodt.size(); i++) {
+                                            Produto c = new ProdutoDao().consultarId(prodt.get(i).id_produto);
+                                            valor += c.valor;
+                                %>
+                                <div class="form-group">
+                                    <div class="col-sm-3 col-xs-3">
+                                        <img class="img-responsive" src="<%=c.file%>" />
+                                    </div>
+
+                                    <div class="col-sm-6 col-xs-6">
+                                        <div class="col-xs-12" id="nome" name="nome">
+                                            <!--<input type="text" 
+                                                   disabled=""
+                                                   name="nome" 
+                                                   id="nome"
+                                                   value="-->
+                                            <%= c.nome%>
+                                            <!--">-->
+                                            <input type="text" 
+                                                   hidden=""
+                                                   disabled=""
+                                                   name="id" 
+                                                   id="id"
+                                                   value="<%= c.id%>">
+                                        </div>
+                                        <div class="col-xs-12"><small>Quantidade:<span><%= prodt.get(i).quant%></span></small></div>
+                                    </div>
+                                    <div class="col-sm-3 col-xs-3 text-right">
+                                        <h6><span>R$</span><%=Formatacao.formatarDecimal(c.valor)+" x"+prodt.get(i).quant%></h6>
+                                        <input type="text" 
+                                                   hidden=""
+                                                   disabled=""
+                                                   name="valorTotal" 
+                                                   id="valorTotal"
+                                                   value="<%= valor%>">
+                                    </div>
+                                </div>
+                                <%}%>
+                                <%}%>
+                                <div class="form-group"><hr/></div>
+                                <div class="form-group">
+                                    <div class="col-xs-12">
+                                        <strong>Subtotal</strong>
+                                        <div class="pull-right"><span>R$</span><span><%=Formatacao.formatarDecimal(valor)%></span></div>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <small>Envio</small>
+                                        <div class="pull-right"><span>Gratuito</span></div>
+                                    </div>
+                                </div>
+                                <div class="form-group"><hr /></div>
+                                <div class="form-group">
+                                    <div class="col-xs-12">
+                                        <strong>Total do Pedido</strong>
+                                        <div class="pull-right"><span>R$</span><span><%=Formatacao.formatarDecimal(valor)%></span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--REVIEW ORDER END-->
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 col-md-pull-6 col-sm-pull-6">
+                        <!--SHIPPING METHOD-->
+                        <div class="panel panel-info">
+                            <div class="panel-heading">Endereço</div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <h4>Endereço de Entrega</h4>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-6 col-xs-12">
+                                        <strong>Nome:</strong>
+                                        <input type="text" name="first_name" class="form-control" value="" />
+                                    </div>
+                                    <div class="span1"></div>
+                                    <div class="col-md-6 col-xs-12">
+                                        <strong>Sobrenome:</strong>
+                                        <input type="text" name="last_name" class="form-control" value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12"><strong>País:</strong></div>
+                                    <div class="col-md-12">
+                                        <input type="text" class="form-control" name="country" value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12"><strong>Estado:</strong></div>
+                                    <div class="col-md-12">
+                                        <input type="text" name="address" class="form-control" value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12"><strong>Cidade:</strong></div>
+                                    <div class="col-md-12">
+                                        <input type="text" name="city" class="form-control" value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12"><strong>Endereço:</strong></div>
+                                    <div class="col-md-12">
+                                        <input type="text" name="state" class="form-control" value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12"><strong>CEP:</strong></div>
+                                    <div class="col-md-12">
+                                        <input type="text" name="zip_code" class="form-control" value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12"><strong>Celular:</strong></div>
+                                    <div class="col-md-12"><input type="text" name="phone_number" class="form-control" value="" /></div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12"><strong>Email:</strong></div>
+                                    <div class="col-md-12"><input type="text" name="email_address" class="form-control" value="" /></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--SHIPPING METHOD END-->
+                        <!--CREDIT CART PAYMENT-->
+                        <div class="panel panel-info">
+                            <div class="panel-heading"><span><i class="glyphicon glyphicon-lock"></i></span> Pagamento Seguro</div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <div class="col-md-12"><strong>Bandeira</strong></div>
+                                    <div class="col-md-12">
+                                        <select id="CreditCardType" name="CreditCardType" class="form-control">
+                                            <option value="1">Visa</option>
+                                            <option value="2">MasterCard</option>
+                                            <option value="3">American Express</option>
+                                            <option value="4">Hipercard</option>
+                                            <option value="5">Elo</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12"><strong>Nº do Cartão:</strong></div>
+                                    <div class="col-md-12"><input type="text" class="form-control" name="car_number" value="" /></div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12"><strong>CVV:</strong></div>
+                                    <div class="col-md-12"><input type="text" class="form-control" name="car_code" value="" /></div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <strong>Data de Validade:</strong>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                        <select class="form-control" name="">
+                                            <option value="">Mês</option>
+                                            <option value="01">01</option>
+                                            <option value="02">02</option>
+                                            <option value="03">03</option>
+                                            <option value="04">04</option>
+                                            <option value="05">05</option>
+                                            <option value="06">06</option>
+                                            <option value="07">07</option>
+                                            <option value="08">08</option>
+                                            <option value="09">09</option>
+                                            <option value="10">10</option>
+                                            <option value="11">11</option>
+                                            <option value="12">12</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                        <select class="form-control" name="">
+                                            <option value="">Ano</option>
+                                            <option value="2015">2015</option>
+                                            <option value="2016">2016</option>
+                                            <option value="2017">2017</option>
+                                            <option value="2018">2018</option>
+                                            <option value="2019">2019</option>
+                                            <option value="2020">2020</option>
+                                            <option value="2021">2021</option>
+                                            <option value="2022">2022</option>
+                                            <option value="2023">2023</option>
+                                            <option value="2024">2024</option>
+                                            <option value="2025">2025</option>
+                                            <option value="2026">2026</option>
+                                            <option value="2027">2027</option>
+                                            <option value="2028">2028</option>
+                                            <option value="2029">2029</option>
+                                            <option value="2030">2030</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <strong>Nº de Parcelas:</strong>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                        <select class="form-control" name="parcelas">
+                                            <option value="0">Parcelas</option>
+                                            <option value="1">1x R$<%=Formatacao.formatarDecimal(valor/1) %></option>
+                                            <option value="2">2x R$<%=Formatacao.formatarDecimal(valor/2) %></option>
+                                            <option value="3">3x R$<%=Formatacao.formatarDecimal(valor/3) %></option>
+                                            <option value="4">4x R$<%=Formatacao.formatarDecimal(valor/4) %></option>
+                                            <option value="5">5x R$<%=Formatacao.formatarDecimal(valor/5) %></option>
+                                            <option value="6">6x R$<%=Formatacao.formatarDecimal(valor/6) %></option>
+                                            <option value="7">7x R$<%=Formatacao.formatarDecimal(valor/7) %></option>
+                                            <option value="8">8x R$<%=Formatacao.formatarDecimal(valor/8) %></option>
+                                            <option value="9">9x R$<%=Formatacao.formatarDecimal(valor/9) %></option>
+                                            <option value="10">10x R$<%=Formatacao.formatarDecimal(valor/10) %></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <button type="submit" class="btn btn-primary btn-submit-fix">Finalizar Pedido</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--CREDIT CART PAYMENT END-->
             </div>
-        </div>
-        <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css'>
-        <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js'></script>
-        <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
-        <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
-        <script  src="/WebMarket/checkout/checkout.css"></script>
+        </form>
+    </div>
+</body>
+</html>

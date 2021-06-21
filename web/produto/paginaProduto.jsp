@@ -32,6 +32,19 @@
                 background-size: 1%;
             }
         </style>
+        <script>
+            function addToCart(id) {
+                fetch(`/WebMarket/cart?param=insertProd&id=\${id}`, {method: 'post'});
+                swal({
+                    title: "YEY!",
+                    text: "O produto foi adicionado ao carrinho!",
+                    icon: "success",
+                    button: false,
+                    timer: 1500
+                });
+            }
+        </script>
+
         <div class="container mt-5 mb-5">
             <div class="card">
                 <div class="row g-0">
@@ -48,24 +61,26 @@
                             <div class="mt-2 pr-3 content">
                                 <p><%=prod.descricao%></p>
                             </div>
-                            <h3 style="padding-top:80px;">R$<%=String.format("%.2f",prod.valor)%></h3>
+                            <h3 style="padding-top:80px;">R$<%=String.format("%.2f", prod.valor)%></h3>
                             <% String isEstockOrIndisponible = "";
                                 String isCartOrAdvise = "";
-                                if (prod.estoque == 0) {
+                                if (prod.estoque == 0 || prod.ativo.equals("N")) {
                                     isEstockOrIndisponible = "Indisponível";
                                     isCartOrAdvise = "Avise-me";
-                           
+                                    %>
+                                    <i class="btn btn-dark" style="margin-left: 5px;"><%= isCartOrAdvise%> </i></div>
+                                    <%
                                 } else {
-                                isEstockOrIndisponible = "Comprar";
-                                isCartOrAdvise = "Colocar no Carrinho";
-                            }%>
-                            <div class="buttons d-flex flex-row mt-5 gap-3" > <button class="btn btn-outline-dark"><%= isEstockOrIndisponible%></button>
+                                    isEstockOrIndisponible = "Comprar";
+                                    isCartOrAdvise = "Colocar no Carrinho";
+                                %>
+                                <button class="btn btn-dark" style="margin-left: 5px;" onclick="addToCart('<%=prod.id%>')"><%= isCartOrAdvise%> </button></div>
+                                <%}%>
 
-                            <button class="btn btn-dark" style="margin-left: 5px;"><%= isCartOrAdvise%> </button></div>
+                            
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-<body>
+    <body>
 </html>

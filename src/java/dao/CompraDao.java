@@ -3,9 +3,13 @@ package dao;
 import apoio.ConexaoBD;
 import apoio.IDAO;
 import entidade.Compra;
-import entidade.Venda;
 import java.util.ArrayList;
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.JasperRunManager;
 
 public class CompraDao implements IDAO<Compra> {
 
@@ -16,12 +20,12 @@ public class CompraDao implements IDAO<Compra> {
         try {
             Statement stm = ConexaoBD.getInstance().getConnection().createStatement();
 
-            String sql = "INSERT INTO compra"
-                    + "default,"
-                    + "'" + o.valor + "',"
+            String sql = "INSERT INTO compra VALUES "
+                    + "(default,"
+                    + "'" + o.valorTotal + "',"
                     + "'" + o.parcelas + "',"
                     + "'" + o.id_pessoa + "',"
-                    + "'" + o.id_carrinho + "'";
+                    + " now())";
 
             System.out.println("SQL: " + sql);
 
@@ -40,10 +44,9 @@ public class CompraDao implements IDAO<Compra> {
             Statement stm = ConexaoBD.getInstance().getConnection().createStatement();
 
             String sql = "UPDATE compra SET "
-                    + "valor=" + o.valor + ","
+                    + "valorTotal=" + o.valorTotal + ","
                     + "parcelas=" + o.parcelas + ","
-                    + "id_pessoa=" + o.id_pessoa + ","
-                    + "id_carrinho=" + o.id_carrinho + " "
+                    + "id_pessoa=" + o.id_pessoa + " "
                     + "WHERE id= " + o.id;
 
             System.out.println("SQL: " + sql);
@@ -106,6 +109,31 @@ public class CompraDao implements IDAO<Compra> {
         return null;
     }
 
+    public ArrayList<Compra> consultaAvancada(String id) {
+        String sql = "";
+        if ("".equals(id)) {
+            sql = "SELECT * "
+                    + "FROM compra ORDER BY created_at";
+        } else {
+            sql = "SELECT * "
+                    + "FROM compra "
+                    + "WHERE id_pessoa =" + Integer.valueOf(id)+" ORDER BY created_at";
+        }
+        ArrayList<Compra> compra = new ArrayList<>();
+
+        try {
+
+            result = ConexaoBD.getInstance().getConnection().createStatement().executeQuery(sql);
+            while (result.next()) {
+                compra.add(Compra.from(result));
+            }
+            return compra;
+        } catch (Exception e) {
+            System.out.println("Erro na consulta avançada: " + e);
+        }
+        return compra;
+    }
+
     @Override
     public Compra consultarId(int id) {
         String sql = "SELECT * FROM compra WHERE id=" + id;
@@ -121,6 +149,26 @@ public class CompraDao implements IDAO<Compra> {
         return null;
     }
 
+    public byte[] gerarRelatorioData(String nome, String dataIni, String dataFim) {
+        try {
+            Connection conn = ConexaoBD.getInstance().getConnection();
+
+            JasperReport relatorio = JasperCompileManager.compileReport(getClass().getResourceAsStream("/relatorios/relatorio_compra.jrxml"));
+
+            Map parameters = new HashMap();
+            parameters.put("nome", nome);
+            parameters.put("dataIni", Date.valueOf(dataIni));
+            parameters.put("dataFim", Date.valueOf(dataFim));
+
+            byte[] bytes = JasperRunManager.runReportToPdf(relatorio, parameters, conn);
+
+            return bytes;
+        } catch (Exception e) {
+            System.out.println("erro ao gerar relatorio: " + e);
+        }
+        return null;
+    }
+    
     @Override
     public boolean consultar(Compra o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

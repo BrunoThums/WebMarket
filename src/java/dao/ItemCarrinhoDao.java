@@ -16,12 +16,12 @@ public class ItemCarrinhoDao implements IDAO<ItemCarrinho> {
         try {
             Statement stm = ConexaoBD.getInstance().getConnection().createStatement();
 
-            String sql = "INSERT INTO itemCarrinho "
-                    + "default,"
+            String sql = "INSERT INTO itemCarrinho VALUES "
+                    + "(default,"
                     + "'" + item.quant + "',"
                     + "'" + item.valorUnit + "',"
-                    + "'" + item.id_produto + ","
-                    + "'now()'" + "'";
+                    + "'" + item.id_produto + "',"
+                    + "'now()')";
 
             System.out.println("SQL: " + sql);
 

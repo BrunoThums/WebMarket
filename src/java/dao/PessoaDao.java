@@ -132,6 +132,24 @@ public class PessoaDao implements IDAO<Pessoa> {
         }
         return null;
     }
+    
+    public ArrayList<Pessoa> consultarNome(String nome) {
+        String sql = "SELECT * FROM pessoa WHERE nome ILIKE '%" + nome + "%'";
+        try {
+            ResultSet result = ConexaoBD.getInstance().getConnection().createStatement().executeQuery(sql);
+            ArrayList<Pessoa> pessoa = new ArrayList<>();
+            while (result.next()) {
+                pessoa.add(Pessoa.from(result));
+            }
+            if (pessoa.isEmpty()) {
+                return null;
+            }
+            return pessoa;
+        } catch (Exception e) {
+            System.out.println("Erro ao consultar pessoas: " + e);
+        }
+        return null;
+    }
 
     @Override
     public Pessoa consultarId(int id) {

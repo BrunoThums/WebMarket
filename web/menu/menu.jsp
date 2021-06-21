@@ -76,6 +76,7 @@
 
                             <li><a href="/WebMarket/categoria/pesquisaCategoria.jsp?ativo=on" class="#pesqCategoria">Categoria</a></li>
                             <li><a href="/WebMarket/produto/pesquisaProduto.jsp?ativo=on&ordem=ASC" class="#pesqProduto">Produto</a></li>
+                            <li><a href="/WebMarket/compra/pesquisaCompra.jsp" class="#pesqCompra">Compra</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -95,6 +96,7 @@
 
                             <li><a href="#" class="relatCateg #relatorio">Categoria</a></li>
                             <li><a href="#" class="relatProd #relatorio">Produto</a></li>
+                            <li><a href="#" class="relatCompra #relatorio">Compra</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -104,9 +106,10 @@
 
                             <li><a href="/WebMarket/graphic/graficoEstoqueBar.jsp" class="#graficoBar">Barra</a></li>
                             <li><a href="/WebMarket/graphic/graficoEstoquePizza.jsp" class="#graficoPizza">Pizza</a></li>
+                            <li><a href="/WebMarket/graphic/graficoCompraBar.jsp" class="#graficoBar">Barra</a></li>
                         </ul>
                     </li>
-                    <li><a href="/WebMarket/checkout/checkout.jsp" class="#carrinho">Carrinho</a></li>
+                    <li><a href="/WebMarket/checkout/cart.jsp" class="#carrinho">Carrinho</a></li>
                     <li><a href="/WebMarket/pessoa/listagemPessoas.jsp" class="#usuarios">Usuários</a></li>
 
                 </ul>
@@ -198,6 +201,26 @@
                     });
                     const [dataInicial, dataFinal] = value;
                     location.href = "/WebMarket/relatorios/relatProduto.jsp?"
+                            + new URLSearchParams({
+                                dataInicial,
+                                dataFinal
+                            }).toString();
+                });
+                
+                document.querySelector(".relatCompra").addEventListener('click', async () => {
+                    const {value} = await Swal.fire({
+                        title: "Insira um intervalo de datas:",
+                        html: '<input class="sw-dataIni" type="date">' +
+                                '<input class="sw-dataFim" type="date">',
+                        preConfirm: () => {
+                            return [
+                                document.querySelector('.sw-dataIni').value,
+                                document.querySelector('.sw-dataFim').value
+                            ];
+                        }
+                    });
+                    const [dataInicial, dataFinal] = value;
+                    location.href = "/WebMarket/relatorios/relatCompra.jsp?"
                             + new URLSearchParams({
                                 dataInicial,
                                 dataFinal

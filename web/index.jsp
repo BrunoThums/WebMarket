@@ -103,7 +103,7 @@
                 <div class="content animated fadeInLeft" >
 
                     <span class="bg animated fadeInDown"><%=c.descricao%></span>
-                    <h5><%=prodt.nome%></h5>
+                    <h5 onclick="location = '/WebMarket/produto/paginaProduto.jsp?id=<%=prodt.id%>'"><%=prodt.nome%></h5>
 
                     <div class="button">
                         <%
@@ -115,7 +115,7 @@
                         <%}%> 
                     </div>
                 </div>
-                <img src="<%=prodt.file%>" onclick="location = '/WebMarket/produto/paginaProduto.jsp?id=<%=prodt.id%>'" width="200px" class="animated fadeInRight">
+                <img src="<%=prodt.file%>"  width="200px" class="animated fadeInRight">
 
             </div>
             <%}%>
