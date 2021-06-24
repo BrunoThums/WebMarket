@@ -42,7 +42,8 @@
                 <th>Cliente</th>
                 <th>Parcelas</th>
                 <th>Valor</th>
-                <th>Criado Em</th>
+                <th>Data</th>
+                <th>Hora</th>
                     <%
                         if (listaCompra == null) {
                             out.print("Não há vendas para listar");
@@ -59,6 +60,7 @@
                     <td><%= c.parcelas%></td>
                     <td><%= Formatacao.formatarDecimal(c.valorTotal)%></td>
                     <td><%= Formatacao.ajustaDataDMA(String.valueOf(c.created_at))%></td>
+                    <td><%= String.valueOf(c.at_time)%></td>
                 </tr>
                 <%
                         }

@@ -9,6 +9,7 @@ public class Compra {
     public Integer parcelas;
     public String created_at; 
     public Integer id_pessoa;
+    public Time at_time;
     
 
     public static Compra from(ResultSet resultSet) throws SQLException {
@@ -19,6 +20,7 @@ public class Compra {
         c.parcelas = (resultSet.getInt("parcelas"));
         c.created_at = (resultSet.getString("created_at"));
         c.id_pessoa = (resultSet.getInt("id_pessoa"));
+        c.at_time = (resultSet.getTime("hora"));
 
         return c;
     }
@@ -32,6 +34,7 @@ public class Compra {
         sb.append("', parcelas='").append(parcelas);
         sb.append("', created_at='").append(created_at);
         sb.append("', id_pessoa='").append(id_pessoa);
+        sb.append("', at_time='").append(at_time);
         sb.append('}');
 
         return sb.toString();

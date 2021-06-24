@@ -104,9 +104,9 @@
                         <ul class="dropdown-menu animated fadeInLeft" role="menu">
                             <div class="dropdown-header"></div>
 
-                            <li><a href="/WebMarket/graphic/graficoEstoqueBar.jsp" class="#graficoBar">Barra</a></li>
-                            <li><a href="/WebMarket/graphic/graficoEstoquePizza.jsp" class="#graficoPizza">Pizza</a></li>
-                            <li><a href="/WebMarket/graphic/graficoCompraBar.jsp" class="#graficoBar">Barra</a></li>
+                            <!--<li><a href="/WebMarket/graphic/graficoEstoqueBar.jsp" class="#graficoBar">Estoque</a></li>-->
+                            <li><a href="/WebMarket/graphic/graficoEstoquePizza.jsp" class="#graficoPizzaEstoque">Estoque</a></li>
+                            <li><a href="/WebMarket/graphic/graficoCompraBar.jsp" class="#graficoBarCompra">Compras</a></li>
                         </ul>
                     </li>
                     <li><a href="/WebMarket/checkout/cart.jsp" class="#carrinho">Carrinho</a></li>

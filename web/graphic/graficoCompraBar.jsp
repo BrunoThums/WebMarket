@@ -1,3 +1,6 @@
+<%@page import="apoio.Formatacao"%>
+<%@page import="apoio.ConexaoBD"%>
+<%@page import="java.sql.ResultSet"%>
 <%@page import="dao.CompraDao"%>
 <%@page import="entidade.Compra"%>
 <%@page import="dao.CategoriaDao"%>
@@ -12,17 +15,26 @@
             <%ArrayList<Compra> listCompra = new CompraDao().consultarTodos();%>
             function drawChart() {
                 var data = google.visualization.arrayToDataTable([
-                    ['Data', 'parcelas', 'Valor', 'Nome'],
+                    ['Data', 'Valor'], ...[
             <%  if (listCompra == null) {
                     out.print("Não há produtos para listar");
                 } else {
-                    for (int i = 0; i < listCompra.size(); i++) {
-                        Compra compra = listCompra.get(i);
-                        Pessoa pe = new PessoaDao().consultarId(compra.id_pessoa);%>
-                    ['<%=compra.created_at%>', <%=compra.parcelas%>, <%=compra.valorTotal%>, '<%=pe.nome%>'],
-            <%}%>
-                ]);
-            <%}%>
+                    String sql
+                            = "SELECT compra.created_at AS data, "
+                            + "SUM(compra.valorTotal) AS total "
+                            + "FROM compra "
+                            + "GROUP BY compra.created_at "
+                            + "HAVING SUM(compra.valorTotal) > 0 "
+                            + "ORDER BY data DESC "
+                            + "LIMIT 7";
+
+                    ResultSet res = ConexaoBD.getInstance().getConnection().createStatement().executeQuery(sql);
+                    while (res.next()) {%>
+                    ['<%=Formatacao.ajustaDataDMA(String.valueOf(res.getDate("data")))%>',<%=res.getLong("total")%>],
+            <%}
+                }%>
+
+            ].reverse()]);
 
                 var options = {
                     chart: {

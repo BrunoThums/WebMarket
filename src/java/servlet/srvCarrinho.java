@@ -168,7 +168,8 @@ public class srvCarrinho extends HttpServlet {
 
             c.id = 0;
             c.parcelas = parcelas;
-            c.valorTotal = valorTotal / parcelas;
+            //c.valorTotal = valorTotal / parcelas;
+            c.valorTotal = valorTotal;
             c.id_pessoa = pessoa.id;
             // Salva a compra e vê o novo id da compra
             // Salvar os itens e pegar os novos ids e dps salvar o carrinho
@@ -186,7 +187,6 @@ public class srvCarrinho extends HttpServlet {
             produtos.clear();
             session.setAttribute("cart", new ArrayList<ItemCarrinho>());
             response.sendRedirect("/WebMarket/checkout/checkout.jsp?certo=COMPRADO");
-            //response.sendRedirect("/WebMarket/checkout/cart.jsp?certo=COMPRADO");
 
         }
     }

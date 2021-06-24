@@ -25,6 +25,7 @@ public class CompraDao implements IDAO<Compra> {
                     + "'" + o.valorTotal + "',"
                     + "'" + o.parcelas + "',"
                     + "'" + o.id_pessoa + "',"
+                    + " now(),"
                     + " now())";
 
             System.out.println("SQL: " + sql);
@@ -109,15 +110,18 @@ public class CompraDao implements IDAO<Compra> {
         return null;
     }
 
-    public ArrayList<Compra> consultaAvancada(String id) {
+    public ArrayList<Compra> consultaAvancada(String nome) {
         String sql = "";
-        if ("".equals(id)) {
+        if (nome == null || nome.isEmpty()) {
             sql = "SELECT * "
                     + "FROM compra ORDER BY created_at";
         } else {
-            sql = "SELECT * "
-                    + "FROM compra "
-                    + "WHERE id_pessoa =" + Integer.valueOf(id)+" ORDER BY created_at";
+            sql
+                    = "SELECT * "
+                    + "FROM compra, pessoa "
+                    + "WHERE pessoa.id=compra.id_pessoa "
+                    + "  AND pessoa.nome ILIKE '%" + nome + "%' "
+                    + "ORDER BY compra.created_at";
         }
         ArrayList<Compra> compra = new ArrayList<>();
 
@@ -168,7 +172,7 @@ public class CompraDao implements IDAO<Compra> {
         }
         return null;
     }
-    
+
     @Override
     public boolean consultar(Compra o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

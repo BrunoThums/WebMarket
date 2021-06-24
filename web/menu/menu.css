@@ -216,6 +216,10 @@ a[class*="#pesqProduto"]::before {
     content: "\f002" !important;
     color: #084298;
 }
+a[class*="#pesqCompra"]::before {
+    content: "\f002" !important;
+    color: #20c997;
+}
 a[class*="#produto"]::before {
     content: "\f108" !important;
     color: #084298;
@@ -256,15 +260,19 @@ a[class*="relatProd"]::before {
     content: "\f0ca" !important;
     color: #084298;
 }
+a[class*="relatCompra"]::before {
+    content: "\f0ca" !important;
+    color: #20c997;
+}
 a[class*="grafico"]::before {
     content: "\f080" !important;
     color: #FFF;
 }
-a[class*="graficoBar"]::before {
+a[class*="graficoBarCompra"]::before {
     content: "\f080" !important;
-    color: #66ffff;
+    color: #20c997;
 }
-a[class*="graficoPizza"]::before {
+a[class*="graficoPizzaEstoque"]::before {
     content: "\f200" !important;
     color: #86b7fe;
 }

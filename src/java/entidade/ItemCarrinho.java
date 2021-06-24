@@ -1,8 +1,9 @@
 package entidade;
 
+import java.io.Serializable;
 import java.sql.*;
 
-public class ItemCarrinho {
+public class ItemCarrinho implements Serializable{
 
     public Integer id;
     public int quant;
